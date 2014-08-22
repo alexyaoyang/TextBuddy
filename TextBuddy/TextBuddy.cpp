@@ -14,6 +14,8 @@ const char delim = '^';
 string fileName;
 const string defaultFileName = "mytextfile.txt";
 const string unableToOpenFile = "Unable to open file";
+const int overwrite = 0;
+const int append = 1;
 
 void printMsg(string msg){
 	cout << msg << endl;
@@ -22,10 +24,10 @@ void printMsg(string msg){
 void writeToFile(string& toStore,int mode){
 	//mode 0 overwrites
 	//mode 1 appends
-	if (mode == 1){
+	if (mode == append){
 		writeFile.open(fileName, ios::app);
 	}
-	else if (mode == 0){
+	else if (mode == overwrite){
 		writeFile.open(fileName);
 	}
 	if (writeFile.good()){
@@ -35,7 +37,9 @@ void writeToFile(string& toStore,int mode){
 			printMsg("added to " + fileName + ": \"" + toStore + "\"");
 		}
 	}
-	else printMsg(unableToOpenFile);
+	else {
+		printMsg(unableToOpenFile);
+	}
 }
 
 bool isEmptyFile(){
@@ -62,7 +66,9 @@ void displayFromFile(){
 				}
 			}
 		}
-		else printMsg(unableToOpenFile);
+		else {
+			printMsg(unableToOpenFile);
+		}
 	}
 }
 
@@ -83,7 +89,9 @@ void deleteFromFile(string& l){
 		readFile.close();
 		writeToFile(value, 0);
 	}
-	else printMsg(unableToOpenFile);
+	else {
+		printMsg(unableToOpenFile);
+	}
 }
 
 void clearFileContents(){
@@ -106,7 +114,7 @@ void delegateTaskWithCommand(string cmd){
 		clearFileContents();
 	}
 	else if (cmd.find("exit") == 0){
-		exit(1);
+		exit(0);
 	}
 	else {
 		printMsg("Invalid command, please re-enter.");
