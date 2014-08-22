@@ -32,7 +32,7 @@ void writeToFile(string& toStore,int mode){
 		writeFile << toStore;
 		if (mode == 1){
 			writeFile << delim;
-			cout << "added to " << fileName << ": \"" << toStore << "\"" << endl;
+			printMsg("added to " + fileName + ": \"" + toStore + "\"");
 		}
 	}
 	else printMsg(unableToOpenFile);
@@ -48,7 +48,7 @@ bool isEmptyFile(){
 void displayFromFile(){
 	readFile.open(fileName);
 	if (isEmptyFile()){
-		cout << fileName << " is empty" << endl;
+		printMsg(fileName + " is empty");
 	}
 	else {
 		if (readFile.good()){
@@ -78,7 +78,7 @@ void deleteFromFile(string& l){
 			end = value.find(delim,start);
 			end++;
 		}
-		cout << "deleted from " << fileName << ": " << value.substr(start, end - start-1) << endl;
+		printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
 		value.erase(start,end-start);
 		readFile.close();
 		writeToFile(value, 0);
@@ -88,8 +88,29 @@ void deleteFromFile(string& l){
 
 void clearFileContents(){
 	remove(fileName.c_str());
-	cout << "all content deleted from " << fileName << endl;
+	printMsg("all content deleted from " + fileName);
 	writeFile.open(fileName);
+}
+
+void delegateTaskWithCommand(string cmd){
+	if (cmd.find("add") == 0){
+		writeToFile(cmd.substr(cmd.find_first_of(' ') + 1), 1);
+	}
+	else if (cmd.find("delete") == 0){
+		deleteFromFile(cmd != "delete" ? cmd.substr(cmd.find_first_of(' ') + 1) : "");
+	}
+	else if (cmd.find("display") == 0){
+		displayFromFile();
+	}
+	else if (cmd.find("clear") == 0){
+		clearFileContents();
+	}
+	else if (cmd.find("exit") == 0){
+		exit(1);
+	}
+	else {
+		printMsg("Invalid command, please re-enter.");
+	}
 }
 
 void listenForCommands(){
@@ -99,25 +120,7 @@ void listenForCommands(){
 		cout << "command: ";
 		string cmd;
 		getline(cin, cmd);
-
-		if (cmd.find("add") == 0){
-			writeToFile(cmd.substr(cmd.find_first_of(' ') + 1),1);
-		}
-		else if (cmd.find("delete") == 0){
-			deleteFromFile(cmd != "delete" ? cmd.substr(cmd.find_first_of(' ') + 1) : "");
-		}
-		else if (cmd.find("display") == 0){
-			displayFromFile();
-		}
-		else if (cmd.find("clear") == 0){
-			clearFileContents();
-		}
-		else if (cmd.find("exit") == 0){
-			break;
-		}
-		else {
-			printMsg("Invalid command, please re-enter.");
-		}
+		delegateTaskWithCommand(cmd);
 	}
 }
 
