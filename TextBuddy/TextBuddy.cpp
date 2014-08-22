@@ -13,6 +13,12 @@ const char delim = '^';
 string fileName;
 const string defaultFileName = "mytextfile.txt";
 const string unableToOpenFile = "Unable to open file";
+const string noParamsError = "Please specify parameters!";
+const string create = "add";
+const string display = "display";
+const string del = "delete";
+const string clear = "clear";
+const string quit = "exit";
 const int overwrite = 0;
 const int append = 1;
 
@@ -20,8 +26,12 @@ void getFileNameFromArgument(char* argv[]);
 void getFileReady();
 void printWelcome();
 void listenForCommands();
+string getInputString();
 void printMsg(string msg);
-void delegateTaskWithCommand(string cmd);
+void delegateTaskWithCommand(string& cmd);
+bool searchKeyInString(string& cmd, string key);
+string getCommandParams(string& cmd);
+void closeFiles();
 void writeToFile(string& toStore, int mode);
 void deleteFromFile(string& l);
 void displayFromFile();
@@ -57,38 +67,71 @@ void printWelcome(){
 
 void listenForCommands(){
 	while (1){
-		readFile.close();
-		writeFile.close();
 		cout << "command: ";
-		string cmd;
-		getline(cin, cmd);
-		delegateTaskWithCommand(cmd);
+		delegateTaskWithCommand(getInputString());
 	}
+}
+
+string getInputString(){
+	string cmd;
+	getline(cin, cmd);
+	return cmd;
 }
 
 void printMsg(string msg){
 	cout << msg << endl;
 }
 
-void delegateTaskWithCommand(string cmd){
-	if (cmd.find("add") == 0){
-		writeToFile(cmd.substr(cmd.find_first_of(' ') + 1), append);
+void delegateTaskWithCommand(string& cmd){
+	closeFiles(); //prepare for new operations
+
+	if (searchKeyInString(cmd,create)){
+		if (getCommandParams(cmd).empty()){
+			printMsg(noParamsError);
+		}
+		else {
+			writeToFile(getCommandParams(cmd), append);
+		}
 	}
-	else if (cmd.find("delete") == 0){
-		deleteFromFile(cmd != "delete" ? cmd.substr(cmd.find_first_of(' ') + 1) : "");
+	else if (searchKeyInString(cmd, del)){
+		if (getCommandParams(cmd).empty()){
+			printMsg(noParamsError);
+		}
+		else {
+			deleteFromFile(getCommandParams(cmd));
+		}
 	}
-	else if (cmd.find("display") == 0){
+	else if (searchKeyInString(cmd, display)){
 		displayFromFile();
 	}
-	else if (cmd.find("clear") == 0){
+	else if (searchKeyInString(cmd, clear)){
 		clearFileContents();
 	}
-	else if (cmd.find("exit") == 0){
+	else if (searchKeyInString(cmd, quit)){
 		exit(0);
 	}
 	else {
 		printMsg("Invalid command, please re-enter.");
 	}
+}
+
+bool searchKeyInString(string& cmd, string key){
+	return cmd.find(key) == 0;
+}
+
+string getCommandParams(string& cmd){
+	int found = cmd.find(' ');
+	if (found < 0){
+		return "";
+	}
+	else {
+		return cmd.substr(found + 1);
+	}
+}
+
+void closeFiles(){
+	readFile.close();
+	writeFile.close();
 }
 
 void writeToFile(string& toStore, int mode){
@@ -113,24 +156,29 @@ void writeToFile(string& toStore, int mode){
 void deleteFromFile(string& l){
 	//need to fix if string is very long
 	readFile.open(fileName);
-	if (readFile.good()){
-		int line = stoi(l);
-		int start = 0;
-		int end = 0;
-		string value;
-		getline(readFile, value);
-		for (int i = 0; i < line; i++){
-			start = end;
-			end = value.find(delim, start);
-			end++;
-		}
-		printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
-		value.erase(start, end - start);
-		readFile.close();
-		writeToFile(value, overwrite);
+	if (isEmptyFile()){
+		printMsg(fileName + " is empty");
 	}
 	else {
-		printMsg(unableToOpenFile);
+		if (readFile.good()){
+			int line = stoi(l);
+			int start = 0;
+			int end = 0;
+			string value;
+			getline(readFile, value);
+			for (int i = 0; i < line; i++){
+				start = end;
+				end = value.find(delim, start);
+				end++;
+			}
+			printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
+			value.erase(start, end - start);
+			readFile.close();
+			writeToFile(value, overwrite);
+		}
+		else {
+			printMsg(unableToOpenFile);
+		}
 	}
 }
 
