@@ -2,10 +2,9 @@
 // Alex Yao Yang
 // A0097699X
 
-#include "stdafx.h"
+#include <stdio.h>
 #include <string>
 #include <iostream>
-#include <iomanip>
 #include <fstream>
 using namespace std;
 ofstream writeFile;
@@ -17,13 +16,31 @@ const string unableToOpenFile = "Unable to open file";
 const int overwrite = 0;
 const int append = 1;
 
+void printMsg(string msg);
+void writeToFile(string& toStore, int mode);
+bool isEmptyFile();
+void displayFromFile();
+void deleteFromFile(string& l);
+void clearFileContents();
+void delegateTaskWithCommand(string cmd);
+void listenForCommands();
+void getFileNameFromArgument(char* argv[]);
+void getFileReady();
+void printWelcome();
+
+int main(int argc, char* argv[]){
+	getFileNameFromArgument(argv);
+	getFileReady();
+	printWelcome();
+	listenForCommands();
+	return 0;
+}
+
 void printMsg(string msg){
 	cout << msg << endl;
 }
 
-void writeToFile(string& toStore,int mode){
-	//mode 0 overwrites
-	//mode 1 appends
+void writeToFile(string& toStore, int mode){
 	if (mode == append){
 		writeFile.open(fileName, ios::app);
 	}
@@ -49,7 +66,7 @@ bool isEmptyFile(){
 	return length == 0;
 }
 
-void displayFromFile(){
+void displayFromFile() {
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
@@ -76,18 +93,20 @@ void deleteFromFile(string& l){
 	//need to fix if string is very long
 	readFile.open(fileName);
 	if (readFile.good()){
-		int line = stoi(l), start = 0, end = 0;
+		int line = stoi(l);
+		int start = 0;
+		int end = 0;
 		string value;
 		getline(readFile, value);
 		for (int i = 0; i < line; i++){
 			start = end;
-			end = value.find(delim,start);
+			end = value.find(delim, start);
 			end++;
 		}
 		printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
-		value.erase(start,end-start);
+		value.erase(start, end - start);
 		readFile.close();
-		writeToFile(value, 0);
+		writeToFile(value, overwrite);
 	}
 	else {
 		printMsg(unableToOpenFile);
@@ -102,7 +121,7 @@ void clearFileContents(){
 
 void delegateTaskWithCommand(string cmd){
 	if (cmd.find("add") == 0){
-		writeToFile(cmd.substr(cmd.find_first_of(' ') + 1), 1);
+		writeToFile(cmd.substr(cmd.find_first_of(' ') + 1), append);
 	}
 	else if (cmd.find("delete") == 0){
 		deleteFromFile(cmd != "delete" ? cmd.substr(cmd.find_first_of(' ') + 1) : "");
@@ -149,12 +168,3 @@ void getFileReady(){
 void printWelcome(){
 	printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
 }
-
-int main(int argc, char* argv[]){
-	getFileNameFromArgument(argv);
-	getFileReady();
-	printWelcome();
-	listenForCommands();
-	return 0;
-}
-
