@@ -12,6 +12,12 @@ ofstream writeFile;
 ifstream readFile;
 const char delim = '^';
 string fileName;
+const string defaultFileName = "mytextfile.txt";
+const string unableToOpenFile = "Unable to open file";
+
+void printMsg(string msg){
+	cout << msg << endl;
+}
 
 void writeToFile(string& toStore,int mode){
 	//mode 0 overwrites
@@ -29,19 +35,19 @@ void writeToFile(string& toStore,int mode){
 			cout << "added to " << fileName << ": \"" << toStore << "\"" << endl;
 		}
 	}
-	else cout << "Unable to open file" << endl;
+	else printMsg(unableToOpenFile);
 }
 
-bool isEmpty(){
+bool isEmptyFile(){
 	readFile.seekg(0, ios::end);
-	int length = readFile.tellg();
+	int length = (int)readFile.tellg();
 	readFile.seekg(0, ios::beg);
 	return length == 0;
 }
 
 void displayFromFile(){
 	readFile.open(fileName);
-	if (isEmpty()){
+	if (isEmptyFile()){
 		cout << fileName << " is empty" << endl;
 	}
 	else {
@@ -56,7 +62,7 @@ void displayFromFile(){
 				}
 			}
 		}
-		else cout << "Unable to open file" << endl;
+		else printMsg(unableToOpenFile);
 	}
 }
 
@@ -77,16 +83,16 @@ void deleteFromFile(string& l){
 		readFile.close();
 		writeToFile(value, 0);
 	}
-	else cout << "Unable to open file" << endl;
+	else printMsg(unableToOpenFile);
 }
 
-void deleteFileContents(){
+void clearFileContents(){
 	remove(fileName.c_str());
 	cout << "all content deleted from " << fileName << endl;
 	writeFile.open(fileName);
 }
 
-void listenForCommand(){
+void listenForCommands(){
 	while (1){
 		readFile.close();
 		writeFile.close();
@@ -104,26 +110,40 @@ void listenForCommand(){
 			displayFromFile();
 		}
 		else if (cmd.find("clear") == 0){
-			deleteFileContents();
+			clearFileContents();
 		}
 		else if (cmd.find("exit") == 0){
 			break;
 		}
-		else{
-			cout << "Invalid command, please re-enter." << endl;
+		else {
+			printMsg("Invalid command, please re-enter.");
 		}
 	}
 }
 
-int main(int argc, char* argv[]){
-	fileName = argv[1] ? argv[1] : "mytextfile.txt";
-	readFile.open(fileName);
-	if (!readFile.good()){
-		writeFile.open(fileName);
+void getFileNameFromArgument(char* argv[]){
+	if (!argv[1]){
+		printMsg("Argument not found, defaulting file name to " + defaultFileName);
+		fileName = defaultFileName;
 	}
-	cout << "Welcome to TextBuddy. " << fileName << " is ready for use" <<endl;
+	else {
+		fileName = argv[1];
+	}
+}
 
-	listenForCommand();
+void getFileReady(){
+	writeFile.open(fileName);
+}
+
+void printWelcome(){
+	printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
+}
+
+int main(int argc, char* argv[]){
+	getFileNameFromArgument(argv);
+	getFileReady();
+	printWelcome();
+	listenForCommands();
 	return 0;
 }
 
