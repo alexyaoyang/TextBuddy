@@ -14,7 +14,7 @@ string fileName;
 const string defaultFileName = "mytextfile.txt";
 const string unableToOpenFile = "Unable to open file";
 const string noParamsError = "Please specify parameters!";
-const string create = "add";
+const string add = "add";
 const string display = "display";
 const string del = "delete";
 const string clear = "clear";
@@ -85,7 +85,7 @@ void printMsg(string msg){
 void delegateTaskWithCommand(string& cmd){
 	closeFiles(); //prepare for new operations
 
-	if (searchKeyInString(cmd,create)){
+	if (searchKeyInString(cmd,add)){
 		if (getCommandParams(cmd).empty()){
 			printMsg(noParamsError);
 		}
@@ -154,31 +154,27 @@ void writeToFile(string& toStore, int mode){
 }
 
 void deleteFromFile(string& l){
-	//need to fix if string is very long
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
 	}
+	else if (readFile.good()){
+		int line = stoi(l);
+		int start = 0;
+		int end = 0;
+		string value;
+		getline(readFile, value);
+		for (int i = 0; i < line; i++){
+			start = end;
+			end = value.find(delim, start) + 1;
+		}
+		printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
+		value.erase(start, end - start);
+		readFile.close();
+		writeToFile(value, overwrite);
+	}
 	else {
-		if (readFile.good()){
-			int line = stoi(l);
-			int start = 0;
-			int end = 0;
-			string value;
-			getline(readFile, value);
-			for (int i = 0; i < line; i++){
-				start = end;
-				end = value.find(delim, start);
-				end++;
-			}
-			printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
-			value.erase(start, end - start);
-			readFile.close();
-			writeToFile(value, overwrite);
-		}
-		else {
-			printMsg(unableToOpenFile);
-		}
+		printMsg(unableToOpenFile);
 	}
 }
 
@@ -187,21 +183,19 @@ void displayFromFile() {
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
 	}
-	else {
-		if (readFile.good()){
-			string line;
-			int i = 1;
-			while (!readFile.eof()){
-				getline(readFile, line, delim);
-				if (line != ""){
-					cout << i << ". " << line << endl;
-					i++;
-				}
+	else if (readFile.good()){
+		string line;
+		int i = 1;
+		while (!readFile.eof()){
+			getline(readFile, line, delim);
+			if (line != ""){
+				printMsg(i + ". " + line);
+				i++;
 			}
 		}
-		else {
-			printMsg(unableToOpenFile);
-		}
+	}
+	else {
+		printMsg(unableToOpenFile);
 	}
 }
 
