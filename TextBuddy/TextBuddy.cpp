@@ -13,7 +13,7 @@ const char delim = '^';
 string fileName;
 const string defaultFileName = "mytextfile.txt";
 const string unableToOpenFile = "Unable to open file";
-const string noParamsError = "Please specify correct parameters!";
+const string paramsError = "Please specify correct parameters!";
 const string add = "add";
 const string display = "display";
 const string del = "delete";
@@ -84,7 +84,7 @@ void delegateTaskWithCommand(string cmd){
 
 	if (searchKeyInString(cmd, add)){
 		if (getCommandParams(cmd).empty()){
-			printMsg(noParamsError);
+			printMsg(paramsError);
 		}
 		else {
 			writeToFile(getCommandParams(cmd), append);
@@ -92,7 +92,7 @@ void delegateTaskWithCommand(string cmd){
 	}
 	else if (searchKeyInString(cmd, del)){
 		if (getCommandParams(cmd).empty()){
-			printMsg(noParamsError);
+			printMsg(paramsError);
 		}
 		else {
 			deleteFromFile(getCommandParams(cmd));
@@ -175,7 +175,7 @@ void deleteFromFile(string l){
 	else if (readFile.good()){
 		int line = stoi(l);
         if(line <= 0){
-            printMsg(noParamsError);
+            printMsg(paramsError);
             return;
         }
 		int start = 0;
@@ -186,12 +186,12 @@ void deleteFromFile(string l){
 			start = end;
 			end = value.find(delim, start) + 1;
 		}
-        value = value.substr(start, end - start - 1);
-        if(value.empty()){
-            printMsg(noParamsError);
+        string toDel = value.substr(start, end - start - 1);
+        if(toDel.empty()){
+            printMsg(paramsError);
             return;
         }
-		printMsg("deleted from " + fileName + ": " + value);
+		printMsg("deleted from " + fileName + ": " + toDel);
 		value.erase(start, end - start);
 		readFile.close();
 		writeToFile(value, overwrite);
