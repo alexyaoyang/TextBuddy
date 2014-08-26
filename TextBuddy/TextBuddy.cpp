@@ -7,10 +7,11 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+
 ofstream writeFile;
 ifstream readFile;
-const char delim = '^';
 string fileName;
+const char delim = '^';
 const string defaultFileName = "mytextfile.txt";
 const string unableToOpenFile = "Unable to open file";
 const string paramsError = "Please specify correct parameters!";
@@ -23,25 +24,25 @@ const int overwrite = 0;
 const int append = 1;
 
 void getFileNameFromArgument(char* argv[]);
-void getFileReady();
+void makeFile();
 void printWelcome();
 void listenForCommands();
-string getInputString();
 void printMsg(string msg);
 void delegateTaskWithCommand(string cmd);
-bool searchKeyInString(string& cmd, string key);
-string getCommandParams(string cmd);
-string trim(string& str);
 void closeFiles();
 void writeToFile(string toStore, int mode);
 void deleteFromFile(string l);
 void displayFromFile();
-bool isEmptyFile();
 void clearFileContents();
+bool isEmptyFile();
+bool searchKeyInString(string& cmd, string key);
+string getInputString();
+string getCommandParams(string cmd);
+string trim(string& str);
 
 int main(int argc, char* argv[]){
 	getFileNameFromArgument(argv);
-	getFileReady();
+	makeFile();
 	printWelcome();
 	listenForCommands();
 
@@ -61,7 +62,7 @@ void getFileNameFromArgument(char* argv[]){
 	}
 }
 
-void getFileReady(){
+void makeFile(){
 	writeFile.open(fileName);
 }
 
