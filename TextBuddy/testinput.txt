@@ -3,8 +3,8 @@ delete 3
 clear
 display
 add          
-delete 1
 delete
+delete 1
 delete 0
 add a
 add 1
@@ -16,3 +16,8 @@ delete 2
 display
 delete 6
 display
+clear
+display
+delete 1
+exit
+
