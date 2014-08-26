@@ -1,0 +1,31 @@
+Welcome to TextBuddy. asd.txt is ready for use
+command: asd.txt is empty
+command: asd.txt is empty
+command: all content deleted from asd.txt
+command: asd.txt is empty
+command: Please specify correct parameters!
+command: Please specify correct parameters!
+command: asd.txt is empty
+command: asd.txt is empty
+command: added to asd.txt: "a"
+command: added to asd.txt: "1"
+command: added to asd.txt: "2345"
+command: added to asd.txt: "little brown fox"
+command: 1. a
+2. 1
+3. 2345
+4. little brown fox
+command: added to asd.txt: "jumped over the moon"
+command: deleted from asd.txt: 1
+command: 1. a
+2. 2345
+3. little brown fox
+4. jumped over the moon
+command: deleted from asd.txt: a
+command: 1. 2345
+2. little brown fox
+3. jumped over the moon
+command: all content deleted from asd.txt
+command: asd.txt is empty
+command: asd.txt is empty
+command: 
