@@ -54,6 +54,9 @@ void getFileNameFromArgument(char* argv[]){
 	}
 	else {
 		fileName = argv[1];
+        if(fileName.find(".txt")== string::npos){
+            fileName = fileName + ".txt";
+        }
 	}
 }
 
