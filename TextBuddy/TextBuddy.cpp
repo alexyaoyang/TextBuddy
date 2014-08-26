@@ -28,12 +28,12 @@ void printWelcome();
 void listenForCommands();
 string getInputString();
 void printMsg(string msg);
-void delegateTaskWithCommand(string& cmd);
+void delegateTaskWithCommand(string cmd);
 bool searchKeyInString(string& cmd, string key);
 string getCommandParams(string& cmd);
 void closeFiles();
-void writeToFile(string& toStore, int mode);
-void deleteFromFile(string& l);
+void writeToFile(string toStore, int mode);
+void deleteFromFile(string l);
 void displayFromFile();
 bool isEmptyFile();
 void clearFileContents();
@@ -65,13 +65,6 @@ void printWelcome(){
 	printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
 }
 
-void listenForCommands(){
-	while (1){
-		cout << "command: ";
-		delegateTaskWithCommand(getInputString());
-	}
-}
-
 string getInputString(){
 	string cmd;
 	getline(cin, cmd);
@@ -82,7 +75,7 @@ void printMsg(string msg){
 	cout << msg << endl;
 }
 
-void delegateTaskWithCommand(string& cmd){
+void delegateTaskWithCommand(string cmd){
 	closeFiles(); //prepare for new operations
 
 	if (searchKeyInString(cmd,add)){
@@ -115,6 +108,13 @@ void delegateTaskWithCommand(string& cmd){
 	}
 }
 
+void listenForCommands(){
+    while (1){
+        cout << "command: ";
+        delegateTaskWithCommand(getInputString());
+    }
+}
+
 bool searchKeyInString(string& cmd, string key){
 	return cmd.find(key) == 0;
 }
@@ -134,7 +134,7 @@ void closeFiles(){
 	writeFile.close();
 }
 
-void writeToFile(string& toStore, int mode){
+void writeToFile(string toStore, int mode){
 	if (mode == append){
 		writeFile.open(fileName, ios::app);
 	}
@@ -153,7 +153,7 @@ void writeToFile(string& toStore, int mode){
 	}
 }
 
-void deleteFromFile(string& l){
+void deleteFromFile(string l){
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
