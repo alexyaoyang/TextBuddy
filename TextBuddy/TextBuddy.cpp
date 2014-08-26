@@ -189,7 +189,8 @@ void displayFromFile() {
 		while (!readFile.eof()){
 			getline(readFile, line, delim);
 			if (line != ""){
-				printMsg(i + ". " + line);
+                cout<<i;
+				printMsg(". " + line);
 				i++;
 			}
 		}
