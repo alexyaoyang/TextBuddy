@@ -13,7 +13,7 @@ const char delim = '^';
 string fileName;
 const string defaultFileName = "mytextfile.txt";
 const string unableToOpenFile = "Unable to open file";
-const string noParamsError = "Please specify parameters!";
+const string noParamsError = "Please specify correct parameters!";
 const string add = "add";
 const string display = "display";
 const string del = "delete";
@@ -125,7 +125,7 @@ bool searchKeyInString(string& cmd, string key){
 
 string getCommandParams(string cmd){
 	int found = cmd.find(' ');
-	if (found < 0){
+	if (found == string::npos){
 		return "";
 	}
 	else {
@@ -174,6 +174,10 @@ void deleteFromFile(string l){
 	}
 	else if (readFile.good()){
 		int line = stoi(l);
+        if(line <= 0){
+            printMsg(noParamsError);
+            return;
+        }
 		int start = 0;
 		int end = 0;
 		string value;

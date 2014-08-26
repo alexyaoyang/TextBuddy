@@ -2,4 +2,7 @@ display
 delete 3
 clear
 display
-add 
+add          
+delete 1
+delete
+delete 0
