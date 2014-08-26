@@ -1,0 +1,5 @@
+display
+delete 3
+clear
+display
+add 

@@ -30,7 +30,8 @@ string getInputString();
 void printMsg(string msg);
 void delegateTaskWithCommand(string cmd);
 bool searchKeyInString(string& cmd, string key);
-string getCommandParams(string& cmd);
+string getCommandParams(string cmd);
+string trim(string& str);
 void closeFiles();
 void writeToFile(string toStore, int mode);
 void deleteFromFile(string l);
@@ -81,7 +82,7 @@ void printMsg(string msg){
 void delegateTaskWithCommand(string cmd){
 	closeFiles(); //prepare for new operations
 
-	if (searchKeyInString(cmd,add)){
+	if (searchKeyInString(cmd, add)){
 		if (getCommandParams(cmd).empty()){
 			printMsg(noParamsError);
 		}
@@ -122,14 +123,24 @@ bool searchKeyInString(string& cmd, string key){
 	return cmd.find(key) == 0;
 }
 
-string getCommandParams(string& cmd){
+string getCommandParams(string cmd){
 	int found = cmd.find(' ');
 	if (found < 0){
 		return "";
 	}
 	else {
-		return cmd.substr(found + 1);
+		cmd = cmd.substr(found + 1);
+        return trim(cmd);
 	}
+}
+
+string trim(string& str){
+    int first = str.find_first_not_of(' ');
+    int last  = str.find_last_not_of(' ');
+    if(first == string::npos || last == string::npos){
+        return "";
+    }
+    return str.substr(first, last-first+1);
 }
 
 void closeFiles(){
