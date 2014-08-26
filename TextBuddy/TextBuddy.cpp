@@ -1,6 +1,14 @@
 // TextBuddy.cpp
 // Alex Yao Yang
 // A0097699X
+// File name in arguments can be empty, will create a text file with default name if file name not found in arguments.
+// This program saves the file after user operations: add, delete and clear.
+// Reasons are
+// 1) only these commands affects the file
+// 2) avoid unnecessary writes
+// 3) allows program to run faster
+// To get duplicate of output file, run code without file name, with the given
+// TestInput.txt below and output to another text file.
 
 #include <stdio.h>
 #include <string>
