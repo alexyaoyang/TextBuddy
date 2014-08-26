@@ -186,7 +186,12 @@ void deleteFromFile(string l){
 			start = end;
 			end = value.find(delim, start) + 1;
 		}
-		printMsg("deleted from " + fileName + ": " + value.substr(start, end - start - 1));
+        value = value.substr(start, end - start - 1);
+        if(value.empty()){
+            printMsg(noParamsError);
+            return;
+        }
+		printMsg("deleted from " + fileName + ": " + value);
 		value.erase(start, end - start);
 		readFile.close();
 		writeToFile(value, overwrite);

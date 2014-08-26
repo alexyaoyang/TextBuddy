@@ -6,3 +6,13 @@ add
 delete 1
 delete
 delete 0
+add a
+add 1
+add 2345
+add little brown fox
+display
+add jumped over the moon
+delete 2
+display
+delete 6
+display
