@@ -91,6 +91,7 @@ string getInputString(){
 
 void printMsg(string msg){
     cout << msg << endl;
+    //make to printf
 }
 
 void delegateTaskWithCommand(string cmd){
@@ -221,18 +222,22 @@ void displayFromFile() {
         printMsg(fileName + " is empty");
     }
     else if (readFile.good()){
-        string line;
-        int i = 1;
-        while (!readFile.eof()){
-            getline(readFile, line, DELIM);
-            if (line != ""){
-                printMsg(i + ". " + line);
-                i++;
-            }
-        }
+        printFromFile();
     }
     else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
+    }
+}
+
+void printFromFile(){
+    string line;
+    int i = 1;
+    while (!readFile.eof()){
+        getline(readFile, line, DELIM);
+        if (line != ""){
+            printMsg(i + ". " + line);
+            i++;
+        }
     }
 }
 
