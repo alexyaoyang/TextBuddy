@@ -24,12 +24,12 @@ const string DEFAULT_FILE_NAME = "mytextfile.txt";
 const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
 const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
 const string ADD = "add";
-const string display = "display";
-const string del = "delete";
-const string clear = "clear";
-const string quit = "exit";
-const int overwrite = 0;
-const int append = 1;
+const string DISPLAY = "display";
+const string DELETE = "delete";
+const string CLEAR = "clear";
+const string QUIT = "exit";
+const int OVERWRITE = 0;
+const int APPEND = 1;
 
 void getFileNameFromArgument(char* argv[]);
 void makeFile();
@@ -96,10 +96,10 @@ void delegateTaskWithCommand(string cmd){
             printMsg(MESSAGE_PARAM_ERROR);
         }
         else {
-            writeToFile(getCommandParams(cmd), append);
+            writeToFile(getCommandParams(cmd), APPEND);
         }
     }
-    else if (searchKeyInString(cmd, del)){
+    else if (searchKeyInString(cmd, DELETE)){
         if (getCommandParams(cmd).empty()){
             printMsg(MESSAGE_PARAM_ERROR);
         }
@@ -107,13 +107,13 @@ void delegateTaskWithCommand(string cmd){
             deleteFromFile(getCommandParams(cmd));
         }
     }
-    else if (searchKeyInString(cmd, display)){
+    else if (searchKeyInString(cmd, DISPLAY)){
         displayFromFile();
     }
-    else if (searchKeyInString(cmd, clear)){
+    else if (searchKeyInString(cmd, CLEAR)){
         clearFileContents();
     }
-    else if (searchKeyInString(cmd, quit)){
+    else if (searchKeyInString(cmd, QUIT)){
         exit(0);
     }
     else {
@@ -158,10 +158,10 @@ void closeFiles(){
 }
 
 void writeToFile(string toStore, int mode){
-    if (mode == append){
+    if (mode == APPEND){
         writeFile.open(fileName, ios::app);
     }
-    else if (mode == overwrite){
+    else if (mode == OVERWRITE){
         writeFile.open(fileName);
     }
     if (writeFile.good()){
@@ -203,7 +203,7 @@ void deleteFromFile(string l){
         printMsg("deleted from " + fileName + ": " + toDel);
         value.erase(start, end - start);
         readFile.close();
-        writeToFile(value, overwrite);
+        writeToFile(value, OVERWRITE);
     }
     else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
