@@ -23,13 +23,17 @@ const char DELIM = '^';
 const string DEFAULT_FILE_NAME = "mytextfile.txt";
 const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
 const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
-const string ADD = "add";
-const string DISPLAY = "display";
-const string DELETE = "delete";
-const string CLEAR = "clear";
-const string QUIT = "exit";
-const int OVERWRITE = 0;
-const int APPEND = 1;
+const string MESSAGE_ARGUMENT_ERROR = "Argument not found, defaulting file name to ";
+const string MESSAGE_CLEARED = "all content deleted from ";
+const int OPERATION_OVERWRITE = 0;
+const int OPERATION_APPEND = 1;
+
+typedef enum(add,display, del, clear, quit) Command;
+Command COMMAND_ADD = "add";
+Command COMMAND_DISPLAY = "display";
+Command COMMAND_DELETE = "delete";
+Command COMMAND_CLEAR = "clear";
+Command COMMAND_QUIT = "exit";
 
 void getFileNameFromArgument(char* argv[]);
 void makeFile();
@@ -43,7 +47,7 @@ void deleteFromFile(string l);
 void displayFromFile();
 void clearFileContents();
 bool isEmptyFile();
-bool searchKeyInString(string& cmd, string key);
+bool keyFoundInString(string& cmd, string key);
 string getInputString();
 string getCommandParams(string cmd);
 string trim(string& str);
@@ -58,13 +62,13 @@ int main(int argc, char* argv[]){
 }
 
 void getFileNameFromArgument(char* argv[]){
-    if (!argv[1]){
-        printMsg("Argument not found, defaulting file name to " + DEFAULT_FILE_NAME);
+    if (!argv[1]){ //if argument not found
+        printMsg(MESSAGE_ARGUMENT_ERROR + DEFAULT_FILE_NAME);
         fileName = DEFAULT_FILE_NAME;
     }
     else {
         fileName = argv[1];
-        if(fileName.find(".txt")== string::npos){
+        if(fileName.find(".txt")== string::npos){ //if .txt extension not found
             fileName = fileName + ".txt";
         }
     }
@@ -91,15 +95,15 @@ void printMsg(string msg){
 void delegateTaskWithCommand(string cmd){
     closeFiles(); //prepare for new operations
     
-    if (searchKeyInString(cmd, ADD)){
+    if (keyFoundInString(cmd, COMMAND_ADD)){
         if (getCommandParams(cmd).empty()){
             printMsg(MESSAGE_PARAM_ERROR);
         }
         else {
-            writeToFile(getCommandParams(cmd), APPEND);
+            writeToFile(getCommandParams(cmd), OPERATION_APPEND);
         }
     }
-    else if (searchKeyInString(cmd, DELETE)){
+    else if (keyFoundInString(cmd, COMMAND_DELETE)){
         if (getCommandParams(cmd).empty()){
             printMsg(MESSAGE_PARAM_ERROR);
         }
@@ -107,13 +111,13 @@ void delegateTaskWithCommand(string cmd){
             deleteFromFile(getCommandParams(cmd));
         }
     }
-    else if (searchKeyInString(cmd, DISPLAY)){
+    else if (keyFoundInString(cmd, COMMAND_DISPLAY)){
         displayFromFile();
     }
-    else if (searchKeyInString(cmd, CLEAR)){
+    else if (keyFoundInString(cmd, COMMAND_CLEAR)){
         clearFileContents();
     }
-    else if (searchKeyInString(cmd, QUIT)){
+    else if (keyFoundInString(cmd, COMMAND_QUIT)){
         exit(0);
     }
     else {
@@ -128,7 +132,7 @@ void listenForCommands(){
     }
 }
 
-bool searchKeyInString(string& cmd, string key){
+bool keyFoundInString(string& cmd, string key){
     return cmd.find(key) == 0;
 }
 
@@ -158,10 +162,10 @@ void closeFiles(){
 }
 
 void writeToFile(string toStore, int mode){
-    if (mode == APPEND){
+    if (mode == OPERATION_APPEND){
         writeFile.open(fileName, ios::app);
     }
-    else if (mode == OVERWRITE){
+    else if (mode == OPERATION_OVERWRITE){
         writeFile.open(fileName);
     }
     if (writeFile.good()){
@@ -176,13 +180,13 @@ void writeToFile(string toStore, int mode){
     }
 }
 
-void deleteFromFile(string l){
+void deleteFromFile(string lineString){
     readFile.open(fileName);
     if (isEmptyFile()){
         printMsg(fileName + " is empty");
     }
     else if (readFile.good()){
-        int line = stoi(l);
+        int line = stoi(lineString);
         if(line <= 0){
             printMsg(MESSAGE_PARAM_ERROR);
             return;
@@ -203,7 +207,7 @@ void deleteFromFile(string l){
         printMsg("deleted from " + fileName + ": " + toDel);
         value.erase(start, end - start);
         readFile.close();
-        writeToFile(value, OVERWRITE);
+        writeToFile(value, OPERATION_OVERWRITE);
     }
     else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
@@ -221,8 +225,7 @@ void displayFromFile() {
         while (!readFile.eof()){
             getline(readFile, line, DELIM);
             if (line != ""){
-                cout<<i;
-                printMsg(". " + line);
+                printMsg(i + ". " + line);
                 i++;
             }
         }
@@ -241,6 +244,6 @@ bool isEmptyFile(){
 
 void clearFileContents(){
     remove(fileName.c_str());
-    printMsg("all content deleted from " + fileName);
+    printMsg(MESSAGE_CLEARED + fileName);
     writeFile.open(fileName);
 }
