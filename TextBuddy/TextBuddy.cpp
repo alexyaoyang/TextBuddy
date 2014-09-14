@@ -25,6 +25,7 @@ const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
 const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
 const string MESSAGE_ARGUMENT_ERROR = "Argument not found, defaulting file name to ";
 const string MESSAGE_CLEARED = "all content deleted from ";
+const string MESSAGE_INVALID_COMMAND = "Invalid command, please re-enter.";
 const string COMMAND_ADD = "add";
 const string COMMAND_DISPLAY = "display";
 const string COMMAND_DELETE = "delete";
@@ -122,7 +123,7 @@ void delegateTaskWithCommand(string cmd){
         exit(0);
     }
     else {
-        printMsg("Invalid command, please re-enter.");
+        printMsg(MESSAGE_INVALID_COMMAND);
     }
 }
 
@@ -199,7 +200,7 @@ void deleteLine(string lineString){
 	try{
 		line = stoi(lineString);
 	}
-	catch(...){
+	catch(exception e){
 		printMsg(MESSAGE_PARAM_ERROR);
 		return;
 	}
