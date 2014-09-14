@@ -195,8 +195,11 @@ void deleteFromFile(string lineString){
 }
 
 void deleteLine(string lineString){
-	int line = stoi(lineString);
-	if (line <= 0){
+	int line;
+	try{
+		line = stoi(lineString);
+	}
+	catch(...){
 		printMsg(MESSAGE_PARAM_ERROR);
 		return;
 	}
@@ -238,7 +241,7 @@ void printFromFile(){
     while (!readFile.eof()){
         getline(readFile, line, DELIM);
         if (line != ""){
-            printMsg(i + ". " + line);
+            printMsg(to_string(i) + ". " + line);
             i++;
         }
     }
