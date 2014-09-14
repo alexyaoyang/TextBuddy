@@ -25,16 +25,13 @@ const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
 const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
 const string MESSAGE_ARGUMENT_ERROR = "Argument not found, defaulting file name to ";
 const string MESSAGE_CLEARED = "all content deleted from ";
+const string COMMAND_ADD = "add";
+const string COMMAND_DISPLAY = "display";
+const string COMMAND_DELETE = "delete";
+const string COMMAND_CLEAR = "clear";
+const string COMMAND_QUIT = "exit";
 const int OPERATION_OVERWRITE = 0;
 const int OPERATION_APPEND = 1;
-
-typedef enum Command{
-    Command COMMAND_ADD = "add",
-    Command COMMAND_DISPLAY = "display",
-    Command COMMAND_DELETE = "delete",
-    Command COMMAND_CLEAR = "clear",
-    Command COMMAND_QUIT = "exit"
-};
 
 void getFileNameFromArgument(char* argv[]);
 void makeFile();
@@ -44,8 +41,10 @@ void printMsg(string msg);
 void delegateTaskWithCommand(string cmd);
 void closeFiles();
 void writeToFile(string toStore, int mode);
-void deleteFromFile(string l);
+void deleteFromFile(string lineString);
+void deleteLine(string lineString);
 void displayFromFile();
+void printFromFile();
 void clearFileContents();
 bool isEmptyFile();
 bool keyFoundInString(string& cmd, string key);
@@ -188,32 +187,36 @@ void deleteFromFile(string lineString){
         printMsg(fileName + " is empty");
     }
     else if (readFile.good()){
-        int line = stoi(lineString);
-        if(line <= 0){
-            printMsg(MESSAGE_PARAM_ERROR);
-            return;
-        }
-        int start = 0;
-        int end = 0;
-        string value;
-        getline(readFile, value);
-        for (int i = 0; i < line; i++){
-            start = end;
-            end = value.find(DELIM, start) + 1;
-        }
-        string toDel = value.substr(start, end - start - 1);
-        if(toDel.empty()){
-            printMsg(MESSAGE_PARAM_ERROR);
-            return;
-        }
-        printMsg("deleted from " + fileName + ": " + toDel);
-        value.erase(start, end - start);
-        readFile.close();
-        writeToFile(value, OPERATION_OVERWRITE);
+		deleteLine(lineString);
     }
     else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
     }
+}
+
+void deleteLine(string lineString){
+	int line = stoi(lineString);
+	if (line <= 0){
+		printMsg(MESSAGE_PARAM_ERROR);
+		return;
+	}
+	int start = 0;
+	int end = 0;
+	string value;
+	getline(readFile, value);
+	for (int i = 0; i < line; i++){
+		start = end;
+		end = value.find(DELIM, start) + 1;
+	}
+	string toDel = value.substr(start, end - start - 1);
+	if (toDel.empty()){
+		printMsg(MESSAGE_PARAM_ERROR);
+		return;
+	}
+	printMsg("deleted from " + fileName + ": " + toDel);
+	value.erase(start, end - start);
+	readFile.close();
+	writeToFile(value, OPERATION_OVERWRITE);
 }
 
 void displayFromFile() {
