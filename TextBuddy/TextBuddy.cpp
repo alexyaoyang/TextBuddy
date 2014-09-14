@@ -28,12 +28,13 @@ const string MESSAGE_CLEARED = "all content deleted from ";
 const int OPERATION_OVERWRITE = 0;
 const int OPERATION_APPEND = 1;
 
-typedef enum(add,display, del, clear, quit) Command;
-Command COMMAND_ADD = "add";
-Command COMMAND_DISPLAY = "display";
-Command COMMAND_DELETE = "delete";
-Command COMMAND_CLEAR = "clear";
-Command COMMAND_QUIT = "exit";
+typedef enum Command{
+    Command COMMAND_ADD = "add",
+    Command COMMAND_DISPLAY = "display",
+    Command COMMAND_DELETE = "delete",
+    Command COMMAND_CLEAR = "clear",
+    Command COMMAND_QUIT = "exit"
+};
 
 void getFileNameFromArgument(char* argv[]);
 void makeFile();
