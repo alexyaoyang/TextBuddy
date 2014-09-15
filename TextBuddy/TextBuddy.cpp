@@ -10,11 +10,7 @@
 // To get duplicate of output file, run code without file name, with the given
 // TestInput.txt below and output to another text file.
 
-#include <stdio.h>
-#include <string>
-#include <iostream>
-#include <fstream>
-using namespace std;
+#include "TextBuddy.h"
 
 ofstream writeFile;
 ifstream readFile;
@@ -33,34 +29,6 @@ const string COMMAND_CLEAR = "clear";
 const string COMMAND_QUIT = "exit";
 const int OPERATION_OVERWRITE = 0;
 const int OPERATION_APPEND = 1;
-
-void getFileNameFromArgument(char* argv[]);
-void makeFile();
-void printWelcome();
-void listenForCommands();
-void printMsg(string msg);
-void delegateTaskWithCommand(string cmd);
-void closeFiles();
-void writeToFile(string toStore, int mode);
-void deleteFromFile(string lineString);
-void deleteLine(string lineString);
-void displayFromFile();
-void printFromFile();
-void clearFileContents();
-bool isEmptyFile();
-bool keyFoundInString(string& cmd, string key);
-string getInputString();
-string getCommandParams(string cmd);
-string trim(string& str);
-
-int main(int argc, char* argv[]){
-    getFileNameFromArgument(argv);
-    makeFile();
-    printWelcome();
-    listenForCommands();
-    
-    return 0;
-}
 
 void getFileNameFromArgument(char* argv[]){
     if (!argv[1]){ //if argument not found
@@ -91,27 +59,16 @@ string getInputString(){
 
 void printMsg(string msg){
     cout << msg << endl;
-    //make to printf
 }
 
 void delegateTaskWithCommand(string cmd){
     closeFiles(); //prepare for new operations
     
     if (keyFoundInString(cmd, COMMAND_ADD)){
-        if (getCommandParams(cmd).empty()){
-            printMsg(MESSAGE_PARAM_ERROR);
-        }
-        else {
-            writeToFile(getCommandParams(cmd), OPERATION_APPEND);
-        }
+		getParamAdd(cmd);
     }
     else if (keyFoundInString(cmd, COMMAND_DELETE)){
-        if (getCommandParams(cmd).empty()){
-            printMsg(MESSAGE_PARAM_ERROR);
-        }
-        else {
-            deleteFromFile(getCommandParams(cmd));
-        }
+		getParamDelete(cmd);
     }
     else if (keyFoundInString(cmd, COMMAND_DISPLAY)){
         displayFromFile();
@@ -125,6 +82,24 @@ void delegateTaskWithCommand(string cmd){
     else {
         printMsg(MESSAGE_INVALID_COMMAND);
     }
+}
+
+void getParamAdd(string cmd){
+	if (getCommandParams(cmd).empty()){
+		printMsg(MESSAGE_PARAM_ERROR);
+	}
+	else {
+		writeToFile(getCommandParams(cmd), OPERATION_APPEND); 
+	}
+}
+
+void getParamDelete(string cmd){
+	if (getCommandParams(cmd).empty()){
+		printMsg(MESSAGE_PARAM_ERROR);
+	}
+	else {
+		deleteFromFile(getCommandParams(cmd));
+	}
 }
 
 void listenForCommands(){
