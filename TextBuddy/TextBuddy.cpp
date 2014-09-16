@@ -10,19 +10,8 @@
 // To get duplicate of output file, run code without file name, with the given
 // TestInput.txt below and output to another text file.
 
-#define EXPORT_TEST_FUNCTIONS
+//#define TEXTBUDDY_DLL
 #include "TextBuddy.h"
-#include "unittest.h"
-
-TextBuddy::TextBuddy(void){
-	TextBuddy::fileName = "mytextfile.txt";
-	/*makeFile();
-	printWelcome();
-	listenForCommands();*/	
-}
-
-TextBuddy::~TextBuddy(void) {
-}
 
 void TextBuddy::getFileNameFromArgument(char* argv[]){
     if (!argv[1]){ //if argument not found

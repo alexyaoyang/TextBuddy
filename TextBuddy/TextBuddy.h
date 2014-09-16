@@ -1,3 +1,9 @@
+//#ifdef TEXTBUDDY_DLL
+#define TEXTBUDDY __declspec(dllexport)
+/*#else
+#define TEXTBUDDY __declspec(dllimport)
+#endif*/
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -7,30 +13,29 @@ using namespace std;
 
 class TextBuddy{
 public:
-	TextBuddy(void);
-	~TextBuddy(void);
-	void getFileNameFromArgument(char* argv[]);
-	void makeFile();
-	void printWelcome();
-	void listenForCommands();
-	void printMsg(string msg);
-	void delegateTaskWithCommand(string cmd);
-	void getParamAdd(string cmd);
-	void getParamDelete(string cmd);
-	void closeFiles();
-	void writeToFile(string toStore, int mode);
-	void deleteFromFile(string lineString);
-	void deleteLine(string lineString);
-	void displayFromFile();
-	string getDisplayFromFile();
-	void printFromFile();
-	string returnFromFile();
-	void clearFileContents();
-	bool isEmptyFile();
-	bool keyFoundInString(string& cmd, string key);
-	string getInputString();
-	string getCommandParams(string cmd);
-	string trim(string& str);
+	TEXTBUDDY int returnOne();
+	TEXTBUDDY string getDisplayFromFile();
+	TEXTBUDDY void getFileNameFromArgument(char* argv[]);
+	TEXTBUDDY void makeFile();
+	TEXTBUDDY void printWelcome();
+	TEXTBUDDY void listenForCommands();
+	TEXTBUDDY void printMsg(string msg);
+	TEXTBUDDY void delegateTaskWithCommand(string cmd);
+	TEXTBUDDY void getParamAdd(string cmd);
+	TEXTBUDDY void getParamDelete(string cmd);
+	TEXTBUDDY void closeFiles();
+	TEXTBUDDY void writeToFile(string toStore, int mode);
+	TEXTBUDDY void deleteFromFile(string lineString);
+	TEXTBUDDY void deleteLine(string lineString);
+	TEXTBUDDY void displayFromFile();
+	TEXTBUDDY void printFromFile();
+	TEXTBUDDY string returnFromFile();
+	TEXTBUDDY void clearFileContents();
+	TEXTBUDDY bool isEmptyFile();
+	TEXTBUDDY bool keyFoundInString(string& cmd, string key);
+	TEXTBUDDY string getInputString();
+	TEXTBUDDY string getCommandParams(string cmd);
+	TEXTBUDDY string trim(string& str);
 	ofstream writeFile;
 	ifstream readFile;
 	string fileName;

@@ -14,3 +14,4 @@ using namespace std;
 #endif
 
 TEXTBUDDY string getDisplayFromFile();
+TEXTBUDDY int returnOne();

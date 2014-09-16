@@ -12,5 +12,4 @@
 
 // TODO: reference additional headers your program requires here
 #include "../TextBuddy/TextBuddy.h"
-#include "../TextBuddy/unittest.h"
 #pragma comment(lib, "../Debug/TextBuddy.lib")

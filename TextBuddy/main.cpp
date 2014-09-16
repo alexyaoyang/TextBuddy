@@ -1,10 +1,12 @@
 #include "TextBuddy.h"
 
 int main(int argc, char* argv[]){
-	/*getFileNameFromArgument(argv);
-	makeFile();
-	printWelcome();
-	listenForCommands();
-	*/
+	TextBuddy tb;
+
+	tb.getFileNameFromArgument(argv);
+	tb.makeFile();
+	tb.printWelcome();
+	tb.listenForCommands();
+
 	return 0;
 }
