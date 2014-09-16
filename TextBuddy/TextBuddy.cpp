@@ -12,25 +12,17 @@
 
 #include "TextBuddy.h"
 
-ofstream writeFile;
-ifstream readFile;
-string fileName;
-const char DELIM = '^';
-const string DEFAULT_FILE_NAME = "mytextfile.txt";
-const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
-const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
-const string MESSAGE_ARGUMENT_ERROR = "Argument not found, defaulting file name to ";
-const string MESSAGE_CLEARED = "all content deleted from ";
-const string MESSAGE_INVALID_COMMAND = "Invalid command, please re-enter.";
-const string COMMAND_ADD = "add";
-const string COMMAND_DISPLAY = "display";
-const string COMMAND_DELETE = "delete";
-const string COMMAND_CLEAR = "clear";
-const string COMMAND_QUIT = "exit";
-const int OPERATION_OVERWRITE = 0;
-const int OPERATION_APPEND = 1;
+TextBuddy::TextBuddy(void){
+	TextBuddy::fileName = "mytextfile.txt";
+	makeFile();
+	printWelcome();
+	listenForCommands();
+}
 
-void getFileNameFromArgument(char* argv[]){
+TextBuddy::~TextBuddy(void) {
+}
+
+void TextBuddy::getFileNameFromArgument(char* argv[]){
     if (!argv[1]){ //if argument not found
         printMsg(MESSAGE_ARGUMENT_ERROR + DEFAULT_FILE_NAME);
         fileName = DEFAULT_FILE_NAME;
@@ -43,25 +35,25 @@ void getFileNameFromArgument(char* argv[]){
     }
 }
 
-void makeFile(){
+void TextBuddy::makeFile(){
     writeFile.open(fileName);
 }
 
-void printWelcome(){
+void TextBuddy::printWelcome(){
     printMsg("Welcome to TextBuddy. " + fileName + " is ready for use");
 }
 
-string getInputString(){
+string TextBuddy::getInputString(){
     string cmd;
     getline(cin, cmd);
     return cmd;
 }
 
-void printMsg(string msg){
+void TextBuddy::printMsg(string msg){
     cout << msg << endl;
 }
 
-void delegateTaskWithCommand(string cmd){
+void TextBuddy::delegateTaskWithCommand(string cmd){
     closeFiles(); //prepare for new operations
     
     if (keyFoundInString(cmd, COMMAND_ADD)){
@@ -84,7 +76,7 @@ void delegateTaskWithCommand(string cmd){
     }
 }
 
-void getParamAdd(string cmd){
+void TextBuddy::getParamAdd(string cmd){
 	if (getCommandParams(cmd).empty()){
 		printMsg(MESSAGE_PARAM_ERROR);
 	}
@@ -93,7 +85,7 @@ void getParamAdd(string cmd){
 	}
 }
 
-void getParamDelete(string cmd){
+void TextBuddy::getParamDelete(string cmd){
 	if (getCommandParams(cmd).empty()){
 		printMsg(MESSAGE_PARAM_ERROR);
 	}
@@ -102,18 +94,18 @@ void getParamDelete(string cmd){
 	}
 }
 
-void listenForCommands(){
+void TextBuddy::listenForCommands(){
     while (1){
         cout << "command: ";
         delegateTaskWithCommand(getInputString());
     }
 }
 
-bool keyFoundInString(string& cmd, string key){
+bool TextBuddy::keyFoundInString(string& cmd, string key){
     return cmd.find(key) == 0;
 }
 
-string getCommandParams(string cmd){
+string TextBuddy::getCommandParams(string cmd){
     int found = cmd.find(' ');
     if (found == string::npos){
         return "";
@@ -124,7 +116,7 @@ string getCommandParams(string cmd){
     }
 }
 
-string trim(string& str){
+string TextBuddy::trim(string& str){
     int first = str.find_first_not_of(' ');
     int last  = str.find_last_not_of(' ');
     if(first == string::npos || last == string::npos){
@@ -133,12 +125,12 @@ string trim(string& str){
     return str.substr(first, last-first+1);
 }
 
-void closeFiles(){
+void TextBuddy::closeFiles(){
     readFile.close();
     writeFile.close();
 }
 
-void writeToFile(string toStore, int mode){
+void TextBuddy::writeToFile(string toStore, int mode){
     if (mode == OPERATION_APPEND){
         writeFile.open(fileName, ios::app);
     }
@@ -157,7 +149,7 @@ void writeToFile(string toStore, int mode){
     }
 }
 
-void deleteFromFile(string lineString){
+void TextBuddy::deleteFromFile(string lineString){
     readFile.open(fileName);
     if (isEmptyFile()){
         printMsg(fileName + " is empty");
@@ -170,7 +162,7 @@ void deleteFromFile(string lineString){
     }
 }
 
-void deleteLine(string lineString){
+void TextBuddy::deleteLine(string lineString){
 	int line;
 	try{
 		line = stoi(lineString);
@@ -198,7 +190,7 @@ void deleteLine(string lineString){
 	writeToFile(value, OPERATION_OVERWRITE);
 }
 
-void displayFromFile() {
+void TextBuddy::displayFromFile() {
     readFile.open(fileName);
     if (isEmptyFile()){
         printMsg(fileName + " is empty");
@@ -211,7 +203,7 @@ void displayFromFile() {
     }
 }
 
-void printFromFile(){
+void TextBuddy::printFromFile(){
     string line;
     int i = 1;
     while (!readFile.eof()){
@@ -223,14 +215,14 @@ void printFromFile(){
     }
 }
 
-bool isEmptyFile(){
+bool TextBuddy::isEmptyFile(){
     readFile.seekg(0, ios::end);
     int length = (int)readFile.tellg();
     readFile.seekg(0, ios::beg);
     return length == 0;
 }
 
-void clearFileContents(){
+void TextBuddy::clearFileContents(){
     remove(fileName.c_str());
     printMsg(MESSAGE_CLEARED + fileName);
     writeFile.open(fileName);
