@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../TextBuddy/TextBuddy.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -10,10 +9,10 @@ namespace UnitTest1
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(displayEmptyFile)
 		{
-			Assert::AreEqual(1, 1);
+			string output = "mytextfile.txt is empty";
+			Assert::AreEqual(getDisplayFromFile(), output);
 		}
-
 	};
 }

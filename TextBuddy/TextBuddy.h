@@ -1,6 +1,3 @@
-#ifndef TEXTBUDDY_H
-#define TEXTBUDDY_H
-
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -25,7 +22,9 @@ public:
 	void deleteFromFile(string lineString);
 	void deleteLine(string lineString);
 	void displayFromFile();
+	string getDisplayFromFile();
 	void printFromFile();
+	string returnFromFile();
 	void clearFileContents();
 	bool isEmptyFile();
 	bool keyFoundInString(string& cmd, string key);
@@ -50,4 +49,3 @@ public:
 	const int OPERATION_OVERWRITE = 0;
 	const int OPERATION_APPEND = 1;
 };
-#endif

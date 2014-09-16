@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="TextBuddy.h" />
+    <ClInclude Include="unittest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

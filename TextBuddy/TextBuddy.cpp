@@ -10,13 +10,15 @@
 // To get duplicate of output file, run code without file name, with the given
 // TestInput.txt below and output to another text file.
 
+#define EXPORT_TEST_FUNCTIONS
 #include "TextBuddy.h"
+#include "unittest.h"
 
 TextBuddy::TextBuddy(void){
 	TextBuddy::fileName = "mytextfile.txt";
-	makeFile();
+	/*makeFile();
 	printWelcome();
-	listenForCommands();
+	listenForCommands();*/	
 }
 
 TextBuddy::~TextBuddy(void) {
@@ -203,6 +205,19 @@ void TextBuddy::displayFromFile() {
     }
 }
 
+string TextBuddy::getDisplayFromFile() {
+	readFile.open(fileName);
+	if (isEmptyFile()){
+		return fileName + " is empty";
+	}
+	else if (readFile.good()){
+		return returnFromFile();
+	}
+	else {
+		return MESSAGE_UNABLE_TO_OPEN_FILE;
+	}
+}
+
 void TextBuddy::printFromFile(){
     string line;
     int i = 1;
@@ -213,6 +228,18 @@ void TextBuddy::printFromFile(){
             i++;
         }
     }
+}
+
+string TextBuddy::returnFromFile(){
+	string line;
+	int i = 1;
+	while (!readFile.eof()){
+		getline(readFile, line, DELIM);
+		if (line != ""){
+			return to_string(i) + ". " + line;
+			i++;
+		}
+	}
 }
 
 bool TextBuddy::isEmptyFile(){
