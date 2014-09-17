@@ -29,8 +29,8 @@ public:
 	TEXTBUDDY void displayFromFile();
 	TEXTBUDDY void readFromFile(int printMode, string key);
 	TEXTBUDDY void printSorted();
-	TEXTBUDDY void printFromStorage();
-	TEXTBUDDY void readIntoStorage();
+	TEXTBUDDY void printFromSet();
+	TEXTBUDDY void readIntoSet();
 	TEXTBUDDY string returnFromFile();
 	TEXTBUDDY void clearFileContents();
 	TEXTBUDDY bool isEmptyFile();

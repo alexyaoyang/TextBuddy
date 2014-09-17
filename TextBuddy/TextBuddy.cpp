@@ -210,7 +210,7 @@ void TextBuddy::searchInFile(string key){
 	}
 }
 
-void TextBuddy::readIntoStorage(){
+void TextBuddy::readIntoSet(){
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
@@ -269,11 +269,11 @@ void TextBuddy::readFromFile(int printMode, string key){
 }
 
 void TextBuddy::printSorted(){
-	readIntoStorage();
-	printFromStorage();
+	readIntoSet();
+	printFromSet();
 }
 
-void TextBuddy::printFromStorage(){
+void TextBuddy::printFromSet(){
 	int i = 1;
 	for (set<string>::iterator it = storage.begin(); it != storage.end(); ++it){
 		printMsg(to_string(i) + ". " + *it);
