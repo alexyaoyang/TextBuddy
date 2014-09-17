@@ -1,8 +1,4 @@
-//#ifdef TEXTBUDDY_DLL
 #define TEXTBUDDY __declspec(dllexport)
-/*#else
-#define TEXTBUDDY __declspec(dllimport)
-#endif*/
 
 #include <stdio.h>
 #include <string>
@@ -13,6 +9,7 @@ using namespace std;
 
 class TextBuddy{
 public:
+	int main(int argc, char* argv[]);
 	TEXTBUDDY int returnOne();
 	TEXTBUDDY string getDisplayFromFile();
 	TEXTBUDDY void getFileNameFromArgument(char* argv[]);
@@ -23,12 +20,13 @@ public:
 	TEXTBUDDY void delegateTaskWithCommand(string cmd);
 	TEXTBUDDY void getParamAdd(string cmd);
 	TEXTBUDDY void getParamDelete(string cmd);
+	TEXTBUDDY void TextBuddy::searchInFile(string key);
 	TEXTBUDDY void closeFiles();
 	TEXTBUDDY void writeToFile(string toStore, int mode);
 	TEXTBUDDY void deleteFromFile(string lineString);
 	TEXTBUDDY void deleteLine(string lineString);
 	TEXTBUDDY void displayFromFile();
-	TEXTBUDDY void printFromFile();
+	TEXTBUDDY void printFromFile(int printMode, string key);
 	TEXTBUDDY string returnFromFile();
 	TEXTBUDDY void clearFileContents();
 	TEXTBUDDY bool isEmptyFile();
@@ -49,8 +47,12 @@ public:
 	const string COMMAND_ADD = "add";
 	const string COMMAND_DISPLAY = "display";
 	const string COMMAND_DELETE = "delete";
-	const string COMMAND_CLEAR = "clear";
+	const string COMMAND_CLEAR = "clear"; 
+	const string COMMAND_SEARCH = "search";
+	const string COMMAND_SORT = "sort";
 	const string COMMAND_QUIT = "exit";
 	const int OPERATION_OVERWRITE = 0;
 	const int OPERATION_APPEND = 1;
+	const int PRINT_MODE_DISPLAY = 0;
+	const int PRINT_MODE_SEARCH = 1;
 };

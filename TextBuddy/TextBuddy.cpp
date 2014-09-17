@@ -10,8 +10,18 @@
 // To get duplicate of output file, run code without file name, with the given
 // TestInput.txt below and output to another text file.
 
-//#define TEXTBUDDY_DLL
 #include "TextBuddy.h"
+
+int main(int argc, char* argv[]){
+	TextBuddy tb;
+
+	tb.getFileNameFromArgument(argv);
+	tb.makeFile();
+	tb.printWelcome();
+	tb.listenForCommands();
+
+	return 0;
+}
 
 void TextBuddy::getFileNameFromArgument(char* argv[]){
     if (!argv[1]){ //if argument not found
@@ -62,6 +72,12 @@ void TextBuddy::delegateTaskWithCommand(string cmd){
     else if (keyFoundInString(cmd, COMMAND_QUIT)){
         exit(0);
     }
+	else if (keyFoundInString(cmd, COMMAND_SEARCH)){
+		searchInFile(getCommandParams(cmd));
+	}
+	else if (keyFoundInString(cmd, COMMAND_SORT)){
+		exit(0);
+	}
     else {
         printMsg(MESSAGE_INVALID_COMMAND);
     }
@@ -82,6 +98,19 @@ void TextBuddy::getParamDelete(string cmd){
 	}
 	else {
 		deleteFromFile(getCommandParams(cmd));
+	}
+}
+
+void TextBuddy::searchInFile(string key){
+	readFile.open(fileName);
+	if (isEmptyFile()){
+		printMsg(fileName + " is empty");
+	}
+	else if (readFile.good()){
+		printFromFile(PRINT_MODE_SEARCH,key);
+	}
+	else {
+		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
 	}
 }
 
@@ -187,7 +216,7 @@ void TextBuddy::displayFromFile() {
         printMsg(fileName + " is empty");
     }
     else if (readFile.good()){
-        printFromFile();
+		printFromFile(PRINT_MODE_DISPLAY, "");
     }
     else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
@@ -207,12 +236,15 @@ string TextBuddy::getDisplayFromFile() {
 	}
 }
 
-void TextBuddy::printFromFile(){
+void TextBuddy::printFromFile(int printMode, string key){
     string line;
     int i = 1;
     while (!readFile.eof()){
         getline(readFile, line, DELIM);
         if (line != ""){
+			if (printMode == PRINT_MODE_SEARCH && line.find(key) == string::npos){
+				continue;
+			}
             printMsg(to_string(i) + ". " + line);
             i++;
         }
