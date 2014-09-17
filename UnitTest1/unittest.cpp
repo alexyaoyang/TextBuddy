@@ -8,16 +8,18 @@ namespace UnitTest
 	TEST_CLASS(TextBuddyTest)
 	{
 	public:
-		
-		TEST_METHOD(checksorted)
+		TextBuddy tb;
+		TEST_METHOD(checkfilename)
 		{
-			TextBuddy tb;
 			tb.fileName = "mytextfile.txt";
+			string out = "mytextfile.txt";
+			Assert::AreEqual(out, tb.fileName);
+		}
+		TEST_METHOD(checksorted)
+		{	
 			tb.makeFile();
-			tb.writeToFile("ccc", 1);
-			tb.writeToFile("bbb", 1);
-			tb.writeToFile("aaa", 1);
-			
+			tb.delegateTaskWithCommand("add ccc");
+			tb.closeFiles();
 			string out = "1. aaa";
 			Assert::AreEqual(out, tb.getDisplayFromFile());
 		}
