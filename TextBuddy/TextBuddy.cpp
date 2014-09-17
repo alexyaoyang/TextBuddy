@@ -76,7 +76,7 @@ void TextBuddy::delegateTaskWithCommand(string cmd){
 		searchInFile(getCommandParams(cmd));
 	}
 	else if (keyFoundInString(cmd, COMMAND_SORT)){
-		exit(0);
+		printSorted();
 	}
     else {
         printMsg(MESSAGE_INVALID_COMMAND);
@@ -98,19 +98,6 @@ void TextBuddy::getParamDelete(string cmd){
 	}
 	else {
 		deleteFromFile(getCommandParams(cmd));
-	}
-}
-
-void TextBuddy::searchInFile(string key){
-	readFile.open(fileName);
-	if (isEmptyFile()){
-		printMsg(fileName + " is empty");
-	}
-	else if (readFile.good()){
-		printFromFile(PRINT_MODE_SEARCH,key);
-	}
-	else {
-		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
 	}
 }
 
@@ -210,13 +197,39 @@ void TextBuddy::deleteLine(string lineString){
 	writeToFile(value, OPERATION_OVERWRITE);
 }
 
+void TextBuddy::searchInFile(string key){
+	readFile.open(fileName);
+	if (isEmptyFile()){
+		printMsg(fileName + " is empty");
+	}
+	else if (readFile.good()){
+		readFromFile(PRINT_MODE_SEARCH, key);
+	}
+	else {
+		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
+	}
+}
+
+void TextBuddy::readIntoStorage(){
+	readFile.open(fileName);
+	if (isEmptyFile()){
+		printMsg(fileName + " is empty");
+	}
+	else if (readFile.good()){
+		readFromFile(PRINT_MODE_STORE, "");
+	}
+	else {
+		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
+	}
+}
+
 void TextBuddy::displayFromFile() {
     readFile.open(fileName);
     if (isEmptyFile()){
         printMsg(fileName + " is empty");
     }
     else if (readFile.good()){
-		printFromFile(PRINT_MODE_DISPLAY, "");
+		readFromFile(PRINT_MODE_DISPLAY, "");
     }
     else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
@@ -236,7 +249,7 @@ string TextBuddy::getDisplayFromFile() {
 	}
 }
 
-void TextBuddy::printFromFile(int printMode, string key){
+void TextBuddy::readFromFile(int printMode, string key){
     string line;
     int i = 1;
     while (!readFile.eof()){
@@ -245,10 +258,27 @@ void TextBuddy::printFromFile(int printMode, string key){
 			if (printMode == PRINT_MODE_SEARCH && line.find(key) == string::npos){
 				continue;
 			}
+			else if (printMode == PRINT_MODE_STORE){
+				storage.insert(line);
+				continue;
+			}
             printMsg(to_string(i) + ". " + line);
             i++;
         }
     }
+}
+
+void TextBuddy::printSorted(){
+	readIntoStorage();
+	printFromStorage();
+}
+
+void TextBuddy::printFromStorage(){
+	int i = 1;
+	for (set<string>::iterator it = storage.begin(); it != storage.end(); ++it){
+		printMsg(to_string(i) + ". " + *it);
+		i++;
+	}
 }
 
 string TextBuddy::returnFromFile(){

@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <set>
 
 using namespace std;
 
@@ -26,7 +27,10 @@ public:
 	TEXTBUDDY void deleteFromFile(string lineString);
 	TEXTBUDDY void deleteLine(string lineString);
 	TEXTBUDDY void displayFromFile();
-	TEXTBUDDY void printFromFile(int printMode, string key);
+	TEXTBUDDY void readFromFile(int printMode, string key);
+	TEXTBUDDY void printSorted();
+	TEXTBUDDY void printFromStorage();
+	TEXTBUDDY void readIntoStorage();
 	TEXTBUDDY string returnFromFile();
 	TEXTBUDDY void clearFileContents();
 	TEXTBUDDY bool isEmptyFile();
@@ -34,9 +38,6 @@ public:
 	TEXTBUDDY string getInputString();
 	TEXTBUDDY string getCommandParams(string cmd);
 	TEXTBUDDY string trim(string& str);
-	ofstream writeFile;
-	ifstream readFile;
-	string fileName;
 	const char DELIM = '^';
 	const string DEFAULT_FILE_NAME = "mytextfile.txt";
 	const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
@@ -55,4 +56,9 @@ public:
 	const int OPERATION_APPEND = 1;
 	const int PRINT_MODE_DISPLAY = 0;
 	const int PRINT_MODE_SEARCH = 1;
+	const int PRINT_MODE_STORE = 2;
+	ofstream writeFile;
+	ifstream readFile;
+	string fileName;
+	set<string> storage;
 };
