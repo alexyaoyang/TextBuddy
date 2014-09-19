@@ -9,19 +9,37 @@ namespace UnitTest
 	{
 	public:
 		TextBuddy tb;
-		TEST_METHOD(checkfilename)
+		TEST_METHOD(checkFilename)
 		{
 			tb.fileName = "mytextfile.txt";
 			string out = "mytextfile.txt";
 			Assert::AreEqual(out, tb.fileName);
 		}
-		TEST_METHOD(checksorted)
+		TEST_METHOD(checkAdded)
 		{	
-			tb.makeFile();
-			tb.delegateTaskWithCommand("add ccc");
+			tb.getReadyToTest();
+			tb.getParamAdd("add ccc");
+			Assert::AreEqual(1, tb.getSize());
+		}
+		TEST_METHOD(checkSorted)
+		{
+			tb.getReadyToTest();
+			tb.getParamAdd("add ccc");
+			tb.getParamAdd("add bbb");
+			tb.getParamAdd("add aaa");
 			tb.closeFiles();
-			string out = "1. aaa";
-			Assert::AreEqual(out, tb.getDisplayFromFile());
+			string out = "aaa";
+			Assert::AreEqual(out, tb.returnSorted());
+		}
+		TEST_METHOD(checkSearch)
+		{
+			tb.getReadyToTest();
+			tb.getParamAdd("add ccc");
+			tb.getParamAdd("add bbb");
+			tb.getParamAdd("add aaa");
+			tb.closeFiles();
+			string out = "aaa";
+			Assert::AreEqual(out, tb.returnSearch("a"));
 		}
 	};
 }

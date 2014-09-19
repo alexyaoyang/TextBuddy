@@ -11,8 +11,9 @@ using namespace std;
 class TextBuddy{
 public:
 	int main(int argc, char* argv[]);
-	TEXTBUDDY int returnOne();
-	TEXTBUDDY string getDisplayFromFile();
+	TEXTBUDDY void getReadyToTest();
+	TEXTBUDDY TextBuddy();
+	TEXTBUDDY int getSize();
 	TEXTBUDDY void getFileNameFromArgument(char* argv[]);
 	TEXTBUDDY void makeFile();
 	TEXTBUDDY void printWelcome();
@@ -21,7 +22,7 @@ public:
 	TEXTBUDDY void delegateTaskWithCommand(string cmd);
 	TEXTBUDDY void getParamAdd(string cmd);
 	TEXTBUDDY void getParamDelete(string cmd);
-	TEXTBUDDY void TextBuddy::searchInFile(string key);
+	TEXTBUDDY void searchInFile(string key);
 	TEXTBUDDY void closeFiles();
 	TEXTBUDDY void writeToFile(string toStore, int mode);
 	TEXTBUDDY void deleteFromFile(string lineString);
@@ -31,15 +32,21 @@ public:
 	TEXTBUDDY void printSorted();
 	TEXTBUDDY void printFromSet();
 	TEXTBUDDY void readIntoSet();
-	TEXTBUDDY string returnFromFile();
 	TEXTBUDDY void clearFileContents();
 	TEXTBUDDY bool isEmptyFile();
 	TEXTBUDDY bool keyFoundInString(string& cmd, string key);
+	TEXTBUDDY string returnFromFile(int printMode, string key);
+	TEXTBUDDY string returnSorted();
+	TEXTBUDDY string returnFromSet();
+	TEXTBUDDY string returnFromFile();
+	TEXTBUDDY string getDisplayFromFile();
+	TEXTBUDDY string returnSearch(string key);
 	TEXTBUDDY string getInputString();
 	TEXTBUDDY string getCommandParams(string cmd);
 	TEXTBUDDY string trim(string& str);
 	const char DELIM = '^';
 	const string DEFAULT_FILE_NAME = "mytextfile.txt";
+	const string MESSAGE_NO_RESULTS = "No results found!";
 	const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
 	const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
 	const string MESSAGE_ARGUMENT_ERROR = "Argument not found, defaulting file name to ";
@@ -60,5 +67,6 @@ public:
 	ofstream writeFile;
 	ifstream readFile;
 	string fileName;
+	int size;
 	set<string> storage;
 };
