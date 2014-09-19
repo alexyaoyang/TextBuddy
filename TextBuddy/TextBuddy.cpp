@@ -28,8 +28,8 @@ TextBuddy::TextBuddy(){
 
 
 void TextBuddy::getReadyToTest(){
-	clearFileContents();
 	fileName = "mytextfile.txt";
+	//clearFileContents();
 }
 
 void TextBuddy::getFileNameFromArgument(char* argv[]){

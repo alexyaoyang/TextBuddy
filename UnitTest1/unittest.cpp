@@ -9,12 +9,6 @@ namespace UnitTest
 	{
 	public:
 		TextBuddy tb;
-		TEST_METHOD(checkFilename)
-		{
-			tb.fileName = "mytextfile.txt";
-			string out = "mytextfile.txt";
-			Assert::AreEqual(out, tb.fileName);
-		}
 		TEST_METHOD(checkAdded)
 		{	
 			tb.getReadyToTest();
@@ -39,7 +33,7 @@ namespace UnitTest
 			tb.getParamAdd("add aaa");
 			tb.closeFiles();
 			string out = "aaa";
-			Assert::AreEqual(out, tb.returnSearch("a"));
+			Assert::AreEqual(out, tb.returnSearch("aa"));
 		}
 	};
 }
