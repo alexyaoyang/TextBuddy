@@ -26,14 +26,6 @@ TextBuddy::TextBuddy(){
 	size = 0;
 }
 
-
-void TextBuddy::getReadyToTest(){
-	fileName = "mytextfile.txt";
-	clearFileContents();
-	writeToFile("", 0);
-	closeFiles();
-}
-
 void TextBuddy::getFileNameFromArgument(char* argv[]){
     if (!argv[1]){ //if argument not found
         printMsg(MESSAGE_ARGUMENT_ERROR + DEFAULT_FILE_NAME);
@@ -72,13 +64,13 @@ void TextBuddy::delegateTaskWithCommand(string cmd){
     } else if (keyFoundInString(cmd, COMMAND_DELETE)){
 		getParamDelete(cmd);
     } else if (keyFoundInString(cmd, COMMAND_DISPLAY)){
-        displayFromFile();
+		fileOperation(FILE_MODE_DISPLAY, "");
     } else if (keyFoundInString(cmd, COMMAND_CLEAR)){
         clearFileContents();
     } else if (keyFoundInString(cmd, COMMAND_QUIT)){
         exit(0);
     } else if (keyFoundInString(cmd, COMMAND_SEARCH)){
-		searchInFile(getCommandParams(cmd));
+		fileOperation(FILE_MODE_SEARCH, getCommandParams(cmd));
 	} else if (keyFoundInString(cmd, COMMAND_SORT)){
 		printSorted();
 	} else {
@@ -99,7 +91,7 @@ void TextBuddy::getParamDelete(string cmd){
 	if (getCommandParams(cmd).empty()){
 		printMsg(MESSAGE_PARAM_ERROR);
 	} else {
-		deleteFromFile(getCommandParams(cmd));
+		fileOperation(FILE_MODE_DELETE, getCommandParams(cmd));
 	}
 }
 
@@ -157,17 +149,6 @@ void TextBuddy::writeToFile(string toStore, int mode){
     }
 }
 
-void TextBuddy::deleteFromFile(string lineString){
-    readFile.open(fileName);
-    if (isEmptyFile()){
-        printMsg(fileName + " is empty");
-    } else if (readFile.good()){
-		deleteLine(lineString);
-    } else {
-        printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
-    }
-}
-
 void TextBuddy::deleteLine(string lineString){
 	int line;
 	try {
@@ -196,58 +177,22 @@ void TextBuddy::deleteLine(string lineString){
 	writeToFile(value, OPERATION_OVERWRITE);
 }
 
-void TextBuddy::searchInFile(string key){
+void TextBuddy::fileOperation(int mode, string key){
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
 	} else if (readFile.good()){
-		readFromFile(PRINT_MODE_SEARCH, key);
+		if (mode == FILE_MODE_DELETE){
+			deleteLine(key);
+		} else if (mode == FILE_MODE_DISPLAY) {
+			readFromFile(FILE_MODE_DISPLAY, "");
+		} else if (mode == FILE_MODE_SEARCH) {
+			readFromFile(FILE_MODE_SEARCH, key);
+		} else if (mode == FILE_MODE_STORE) {
+			readFromFile(FILE_MODE_STORE, "");
+		}
 	} else {
 		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
-	}
-}
-
-string TextBuddy::returnSearch(string key){
-	readFile.open(fileName);
-	if (isEmptyFile()){
-		return fileName + " is empty";
-	} else if (readFile.good()){
-		return returnFromFile(PRINT_MODE_SEARCH, key);
-	} else {
-		return MESSAGE_UNABLE_TO_OPEN_FILE;
-	}
-}
-
-void TextBuddy::readIntoSet(){
-	readFile.open(fileName);
-	if (isEmptyFile()){
-		printMsg(fileName + " is empty");
-	} else if (readFile.good()){
-		readFromFile(PRINT_MODE_STORE, "");
-	} else {
-		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
-	}
-}
-
-void TextBuddy::displayFromFile() {
-    readFile.open(fileName);
-    if (isEmptyFile()){
-        printMsg(fileName + " is empty");
-    } else if (readFile.good()){
-		readFromFile(PRINT_MODE_DISPLAY, "");
-    } else {
-        printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
-    }
-}
-
-string TextBuddy::getDisplayFromFile() {
-	readFile.open(fileName);
-	if (isEmptyFile()){
-		return fileName + " is empty";
-	} else if (readFile.good()){
-		return returnFromFile();
-	} else {
-		return MESSAGE_UNABLE_TO_OPEN_FILE;
 	}
 }
 
@@ -258,9 +203,9 @@ void TextBuddy::readFromFile(int printMode, string key){
     while (!readFile.eof()){
         getline(readFile, line, DELIM);
         if (line != ""){
-			if (printMode == PRINT_MODE_SEARCH && line.find(key) == string::npos){
+			if (printMode == FILE_MODE_SEARCH && line.find(key) == string::npos){
 				continue;
-			} else if (printMode == PRINT_MODE_STORE){
+			} else if (printMode == FILE_MODE_STORE){
 				storage.insert(line);
 				continue;
 			}
@@ -269,42 +214,14 @@ void TextBuddy::readFromFile(int printMode, string key){
 			found = true;
         }
     }
-	if (printMode == PRINT_MODE_SEARCH && !found){
+	if (printMode == FILE_MODE_SEARCH && !found){
 		printMsg(MESSAGE_NO_RESULTS);
 	}
 }
 
-string TextBuddy::returnFromFile(int printMode, string key){
-	string line;
-	int i = 1;
-	bool found = false;
-	while (!readFile.eof()){
-		getline(readFile, line, DELIM);
-		if (line != ""){
-			if (printMode == PRINT_MODE_SEARCH && line.find(key) == string::npos){
-				continue;
-			} else if (printMode == PRINT_MODE_STORE){
-				storage.insert(line);
-				continue;
-			}
-			return to_string(i) + ". " + line;
-			i++;
-			found = true;
-		}
-	}
-	if (printMode == PRINT_MODE_SEARCH && !found){
-		return MESSAGE_NO_RESULTS;
-	}
-}
-
 void TextBuddy::printSorted(){
-	readIntoSet();
+	fileOperation(FILE_MODE_STORE, "");
 	printFromSet();
-}
-
-string TextBuddy::returnSorted(int mode){
-	readIntoSet();
-	return returnFromSet(mode);
 }
 
 void TextBuddy::printFromSet(){
@@ -316,33 +233,6 @@ void TextBuddy::printFromSet(){
 	for (set<string>::iterator it = storage.begin(); it != storage.end(); ++it){
 		printMsg(to_string(i) + ". " + *it);
 		i++;
-	}
-}
-
-string TextBuddy::returnFromSet(int mode){
-	if (storage.size() == 0){
-		return MESSAGE_EMPTY_FILE;
-	}
-	set<string>::iterator it;
-	if (mode == SORT_FIRST)
-		it = storage.begin();
-	else if (mode == SORT_LAST) {
-		it = storage.end();
-		it--;
-	}
-
-	return *it;
-}
-
-string TextBuddy::returnFromFile(){
-	string line;
-	int i = 1;
-	while (!readFile.eof()){
-		getline(readFile, line, DELIM);
-		if (line != ""){
-			return to_string(i) + ". " + line;
-			i++;
-		}
 	}
 }
 
@@ -360,6 +250,67 @@ void TextBuddy::clearFileContents(){
 	size = 0;
 }
 
+void TextBuddy::getReadyToTest(){
+	fileName = "mytextfile.txt";
+	clearFileContents();
+	writeToFile("", 0);
+	closeFiles();
+}
+
 int TextBuddy::getSize(){
 	return size;
+}
+
+string TextBuddy::returnFromFile(int printMode, string key){
+	string line;
+	int i = 1;
+	bool found = false;
+	while (!readFile.eof()){
+		getline(readFile, line, DELIM);
+		if (line != ""){
+			if (printMode == FILE_MODE_SEARCH && line.find(key) == string::npos){
+				continue;
+			} else if (printMode == FILE_MODE_STORE){
+				storage.insert(line);
+				continue;
+			}
+			return to_string(i) + ". " + line;
+			i++;
+			found = true;
+		}
+	}
+	if (printMode == FILE_MODE_SEARCH && !found){
+		return MESSAGE_NO_RESULTS;
+	}
+}
+
+string TextBuddy::returnSearch(string key){
+	readFile.open(fileName);
+	if (isEmptyFile()){
+		return fileName + " is empty";
+	} else if (readFile.good()){
+		return returnFromFile(FILE_MODE_SEARCH, key);
+	} else {
+		return MESSAGE_UNABLE_TO_OPEN_FILE;
+	}
+}
+
+string TextBuddy::returnSorted(int mode){
+	fileOperation(FILE_MODE_STORE, "");
+	return returnFromSet(mode);
+}
+
+string TextBuddy::returnFromSet(int mode){
+	if (storage.size() == 0){
+		return MESSAGE_EMPTY_FILE;
+	}
+	set<string>::iterator it;
+	if (mode == SORT_FIRST){
+		it = storage.begin();
+	} else if (mode == SORT_LAST) {
+		it = storage.end();
+		it--;
+	}
+
+	return *it;
 }

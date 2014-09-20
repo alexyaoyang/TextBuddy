@@ -11,9 +11,7 @@ using namespace std;
 class TextBuddy{
 public:
 	int main(int argc, char* argv[]);
-	TEXTBUDDY void getReadyToTest();
 	TEXTBUDDY TextBuddy();
-	TEXTBUDDY int getSize();
 	TEXTBUDDY void getFileNameFromArgument(char* argv[]);
 	TEXTBUDDY void makeFile();
 	TEXTBUDDY void printWelcome();
@@ -22,28 +20,29 @@ public:
 	TEXTBUDDY void delegateTaskWithCommand(string cmd);
 	TEXTBUDDY void getParamAdd(string cmd);
 	TEXTBUDDY void getParamDelete(string cmd);
-	TEXTBUDDY void searchInFile(string key);
-	TEXTBUDDY void closeFiles();
 	TEXTBUDDY void writeToFile(string toStore, int mode);
-	TEXTBUDDY void deleteFromFile(string lineString);
-	TEXTBUDDY void deleteLine(string lineString);
-	TEXTBUDDY void displayFromFile();
 	TEXTBUDDY void readFromFile(int printMode, string key);
+	TEXTBUDDY void closeFiles();
+	TEXTBUDDY void fileOperation(int mode, string key);
+	TEXTBUDDY void deleteLine(string lineString);
 	TEXTBUDDY void printSorted();
 	TEXTBUDDY void printFromSet();
-	TEXTBUDDY void readIntoSet();
 	TEXTBUDDY void clearFileContents();
 	TEXTBUDDY bool isEmptyFile();
 	TEXTBUDDY bool keyFoundInString(string& cmd, string key);
-	TEXTBUDDY string returnFromFile(int printMode, string key);
-	TEXTBUDDY string returnSorted(int mode);
-	TEXTBUDDY string returnFromSet(int mode);
-	TEXTBUDDY string returnFromFile();
-	TEXTBUDDY string getDisplayFromFile();
-	TEXTBUDDY string returnSearch(string key);
 	TEXTBUDDY string getInputString();
 	TEXTBUDDY string getCommandParams(string cmd);
 	TEXTBUDDY string trim(string& str);
+
+	//test methods
+	TEXTBUDDY void getReadyToTest();
+	TEXTBUDDY int getSize();
+	TEXTBUDDY string returnFromFile(int printMode, string key);
+	TEXTBUDDY string returnSorted(int mode);
+	TEXTBUDDY string returnFromSet(int mode);
+	TEXTBUDDY string returnSearch(string key);
+
+	//constants and variables
 	const char DELIM = '^';
 	const string DEFAULT_FILE_NAME = "mytextfile.txt";
 	const string MESSAGE_NO_RESULTS = "No results found!";
@@ -62,9 +61,10 @@ public:
 	const string COMMAND_QUIT = "exit";
 	const int OPERATION_OVERWRITE = 0;
 	const int OPERATION_APPEND = 1;
-	const int PRINT_MODE_DISPLAY = 0;
-	const int PRINT_MODE_SEARCH = 1;
-	const int PRINT_MODE_STORE = 2;
+	const int FILE_MODE_DISPLAY = 0;
+	const int FILE_MODE_SEARCH = 1;
+	const int FILE_MODE_STORE = 2;
+	const int FILE_MODE_DELETE = 3;
 	const int SORT_FIRST = 0;
 	const int SORT_LAST = 1;
 	ofstream writeFile;
