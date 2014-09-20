@@ -2,7 +2,7 @@
 // Alex Yao Yang
 // A0097699X
 // File name in arguments can be empty, will create a text file with default name if file name not found in arguments.
-// This program saves the file after user operations: add, delete and clear.
+// This program saves the file after user operations: add, delete, clear and sort.
 // Reasons are
 // 1) only these commands affects the file
 // 2) avoid unnecessary writes
@@ -260,6 +260,7 @@ void TextBuddy::clearFileContents(int mode){
 	size = 0;
 }
 
+// Test methods
 void TextBuddy::getReadyToTest(){
 	fileName = "mytextfile.txt";
 	clearFileContents(CLEAR_SILENT);
