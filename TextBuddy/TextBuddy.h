@@ -1,3 +1,7 @@
+// Textbuddy.h
+// Alex Yao Yang
+// A0097699X
+
 #define TEXTBUDDY __declspec(dllexport)
 
 #include <stdio.h>
