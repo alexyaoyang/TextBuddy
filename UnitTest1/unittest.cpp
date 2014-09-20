@@ -13,92 +13,73 @@ namespace UnitTest
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
-			tb.closeFiles();
 			Assert::AreEqual(1, tb.getSize());
 		}
 		TEST_METHOD(checkEmptySorted)
 		{
 			tb.getReadyToTest();
-			string out = "Empty File!";
-			Assert::AreEqual(out, tb.returnSorted(0));
+			string expected = "Empty File!";
+			Assert::AreEqual(expected, tb.returnSorted(0));
 		}
 		TEST_METHOD(checkFirstSorted)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc"); 
-			tb.closeFiles();
 			tb.getParamAdd("add bbb");
-			tb.closeFiles();
 			tb.getParamAdd("add aaa");
-			tb.closeFiles();
-			string out = "aaa";
-			Assert::AreEqual(out, tb.returnSorted(0));
+			string expected = "aaa";
+			Assert::AreEqual(expected, tb.returnSorted(0));
 		}
 		TEST_METHOD(checkLastSorted)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
-			tb.closeFiles();
 			tb.getParamAdd("add bbb");
-			tb.closeFiles();
 			tb.getParamAdd("add aaa");
-			tb.closeFiles();
-			string out = "ccc";
-			Assert::AreEqual(out, tb.returnSorted(1));
+			string expected = "ccc";
+			Assert::AreEqual(expected, tb.returnSorted(1));
 		}
 		TEST_METHOD(checkEmptySearch)
 		{
 			tb.getReadyToTest();
-			string out = tb.fileName + " is empty";
-			Assert::AreEqual(out, tb.returnSearch("aa"));
+			string expected = tb.fileName + " is empty";
+			Assert::AreEqual(expected, tb.returnSearch("aa"));
 		}
 		TEST_METHOD(checkSearchNotFound)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
-			tb.closeFiles();
 			tb.getParamAdd("add bbb");
-			tb.closeFiles();
 			tb.getParamAdd("add aaa");
-			tb.closeFiles();
-			string out = "No results found!";
-			Assert::AreEqual(out, tb.returnSearch("cba"));
+			string expected = "No results found!";
+			Assert::AreEqual(expected, tb.returnSearch("abc"));
 		}
 		TEST_METHOD(checkSearch1)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
-			tb.closeFiles();
 			tb.getParamAdd("add bbb");
-			tb.closeFiles();
 			tb.getParamAdd("add aaa");
-			tb.closeFiles();
-			string out = "1. aaa";
-			Assert::AreEqual(out, tb.returnSearch("aa"));
+			string expected = "1. aaa";
+			Assert::AreEqual(expected, tb.returnSearch("aa"));
 		}
 		TEST_METHOD(checkSearch2)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
-			tb.closeFiles();
 			tb.getParamAdd("add bbb");
-			tb.closeFiles();
 			tb.getParamAdd("add aaa");
-			tb.closeFiles();
-			string out = "1. bbb";
-			Assert::AreEqual(out, tb.returnSearch("b"));
+			string expected = "1. bbb";
+			Assert::AreEqual(expected, tb.returnSearch("b"));
 		}
 		TEST_METHOD(checkSearch3)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
-			tb.closeFiles();
 			tb.getParamAdd("add bbb");
-			tb.closeFiles();
 			tb.getParamAdd("add aaa");
-			tb.closeFiles();
-			string out = "1. ccc";
-			Assert::AreEqual(out, tb.returnSearch("c"));
+			string expected = "1. ccc";
+			Assert::AreEqual(expected, tb.returnSearch("c"));
 		}
 	};
 }

@@ -92,6 +92,7 @@ void TextBuddy::getParamAdd(string cmd){
 	} else {
 		writeToFile(getCommandParams(cmd), OPERATION_APPEND); 
 	}
+	closeFiles();
 }
 
 void TextBuddy::getParamDelete(string cmd){
