@@ -28,8 +28,10 @@ TextBuddy::TextBuddy(){
 
 
 void TextBuddy::getReadyToTest(){
-	clearFileContents();
 	fileName = "mytextfile.txt";
+	clearFileContents();
+	writeToFile("", 0);
+	closeFiles();
 }
 
 void TextBuddy::getFileNameFromArgument(char* argv[]){
@@ -299,12 +301,16 @@ void TextBuddy::printSorted(){
 	printFromSet();
 }
 
-string TextBuddy::returnFirstSorted(){
+string TextBuddy::returnSorted(int mode){
 	readIntoSet();
-	return returnFromSet();
+	return returnFromSet(mode);
 }
 
 void TextBuddy::printFromSet(){
+	if (storage.size() == 0){
+		printMsg(MESSAGE_EMPTY_FILE);
+		return;
+	}
 	int i = 1;
 	for (set<string>::iterator it = storage.begin(); it != storage.end(); ++it){
 		printMsg(to_string(i) + ". " + *it);
@@ -312,9 +318,18 @@ void TextBuddy::printFromSet(){
 	}
 }
 
-string TextBuddy::returnFromSet(){
-	int i = 1;
-	set<string>::iterator it = storage.begin();
+string TextBuddy::returnFromSet(int mode){
+	if (storage.size() == 0){
+		return MESSAGE_EMPTY_FILE;
+	}
+	set<string>::iterator it;
+	if (mode == SORT_FIRST)
+		it = storage.begin();
+	else if (mode == SORT_LAST) {
+		it = storage.end();
+		it--;
+	}
+
 	return *it;
 }
 

@@ -36,8 +36,8 @@ public:
 	TEXTBUDDY bool isEmptyFile();
 	TEXTBUDDY bool keyFoundInString(string& cmd, string key);
 	TEXTBUDDY string returnFromFile(int printMode, string key);
-	TEXTBUDDY string returnFirstSorted();
-	TEXTBUDDY string returnFromSet();
+	TEXTBUDDY string returnSorted(int mode);
+	TEXTBUDDY string returnFromSet(int mode);
 	TEXTBUDDY string returnFromFile();
 	TEXTBUDDY string getDisplayFromFile();
 	TEXTBUDDY string returnSearch(string key);
@@ -48,6 +48,7 @@ public:
 	const string DEFAULT_FILE_NAME = "mytextfile.txt";
 	const string MESSAGE_NO_RESULTS = "No results found!";
 	const string MESSAGE_UNABLE_TO_OPEN_FILE = "Unable to open file";
+	const string MESSAGE_EMPTY_FILE = "Empty File!";
 	const string MESSAGE_PARAM_ERROR = "Please specify correct parameters!";
 	const string MESSAGE_ARGUMENT_ERROR = "Argument not found, defaulting file name to ";
 	const string MESSAGE_CLEARED = "all content deleted from ";
@@ -64,6 +65,8 @@ public:
 	const int PRINT_MODE_DISPLAY = 0;
 	const int PRINT_MODE_SEARCH = 1;
 	const int PRINT_MODE_STORE = 2;
+	const int SORT_FIRST = 0;
+	const int SORT_LAST = 1;
 	ofstream writeFile;
 	ifstream readFile;
 	string fileName;
