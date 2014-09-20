@@ -13,26 +13,31 @@ namespace UnitTest
 		{	
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
+			tb.closeFiles();
 			Assert::AreEqual(1, tb.getSize());
 		}
 		TEST_METHOD(checkSorted)
 		{
 			tb.getReadyToTest();
-			tb.getParamAdd("add ccc");
+			tb.getParamAdd("add ccc"); 
+			tb.closeFiles();
 			tb.getParamAdd("add bbb");
+			tb.closeFiles();
 			tb.getParamAdd("add aaa");
 			tb.closeFiles();
 			string out = "aaa";
-			Assert::AreEqual(out, tb.returnSorted());
+			Assert::AreEqual(out, tb.returnFirstSorted());
 		}
 		TEST_METHOD(checkSearch)
 		{
 			tb.getReadyToTest();
 			tb.getParamAdd("add ccc");
+			tb.closeFiles();
 			tb.getParamAdd("add bbb");
+			tb.closeFiles();
 			tb.getParamAdd("add aaa");
 			tb.closeFiles();
-			string out = "aaa";
+			string out = "1. aaa";
 			Assert::AreEqual(out, tb.returnSearch("aa"));
 		}
 	};

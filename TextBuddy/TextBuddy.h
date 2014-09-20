@@ -36,7 +36,7 @@ public:
 	TEXTBUDDY bool isEmptyFile();
 	TEXTBUDDY bool keyFoundInString(string& cmd, string key);
 	TEXTBUDDY string returnFromFile(int printMode, string key);
-	TEXTBUDDY string returnSorted();
+	TEXTBUDDY string returnFirstSorted();
 	TEXTBUDDY string returnFromSet();
 	TEXTBUDDY string returnFromFile();
 	TEXTBUDDY string getDisplayFromFile();

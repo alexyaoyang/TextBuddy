@@ -28,16 +28,15 @@ TextBuddy::TextBuddy(){
 
 
 void TextBuddy::getReadyToTest(){
+	clearFileContents();
 	fileName = "mytextfile.txt";
-	//clearFileContents();
 }
 
 void TextBuddy::getFileNameFromArgument(char* argv[]){
     if (!argv[1]){ //if argument not found
         printMsg(MESSAGE_ARGUMENT_ERROR + DEFAULT_FILE_NAME);
         fileName = DEFAULT_FILE_NAME;
-    }
-    else {
+    } else {
         fileName = argv[1];
         if(fileName.find(".txt")== string::npos){ //if .txt extension not found
             fileName = fileName + ".txt";
@@ -68,32 +67,19 @@ void TextBuddy::delegateTaskWithCommand(string cmd){
     
     if (keyFoundInString(cmd, COMMAND_ADD)){
 		getParamAdd(cmd);
-    }
-    else if (keyFoundInString(cmd, COMMAND_DELETE)){
+    } else if (keyFoundInString(cmd, COMMAND_DELETE)){
 		getParamDelete(cmd);
-    }
-    else if (keyFoundInString(cmd, COMMAND_DISPLAY)){
+    } else if (keyFoundInString(cmd, COMMAND_DISPLAY)){
         displayFromFile();
-    }
-    else if (keyFoundInString(cmd, COMMAND_CLEAR)){
+    } else if (keyFoundInString(cmd, COMMAND_CLEAR)){
         clearFileContents();
-    }
-    else if (keyFoundInString(cmd, COMMAND_QUIT)){
+    } else if (keyFoundInString(cmd, COMMAND_QUIT)){
         exit(0);
-    }
-	else if (keyFoundInString(cmd, COMMAND_SEARCH)){
+    } else if (keyFoundInString(cmd, COMMAND_SEARCH)){
 		searchInFile(getCommandParams(cmd));
-	}
-	else if (keyFoundInString(cmd, COMMAND_SORT)){
+	} else if (keyFoundInString(cmd, COMMAND_SORT)){
 		printSorted();
-	}
-	else if (keyFoundInString(cmd, "sorz")){
-		printMsg(returnSorted());
-	}
-	else if (keyFoundInString(cmd, "searz")){
-		printMsg(returnSearch(getCommandParams(cmd)));
-	}
-    else {
+	} else {
         printMsg(MESSAGE_INVALID_COMMAND);
     }
 }
@@ -101,8 +87,7 @@ void TextBuddy::delegateTaskWithCommand(string cmd){
 void TextBuddy::getParamAdd(string cmd){
 	if (getCommandParams(cmd).empty()){
 		printMsg(MESSAGE_PARAM_ERROR);
-	}
-	else {
+	} else {
 		writeToFile(getCommandParams(cmd), OPERATION_APPEND); 
 	}
 }
@@ -110,8 +95,7 @@ void TextBuddy::getParamAdd(string cmd){
 void TextBuddy::getParamDelete(string cmd){
 	if (getCommandParams(cmd).empty()){
 		printMsg(MESSAGE_PARAM_ERROR);
-	}
-	else {
+	} else {
 		deleteFromFile(getCommandParams(cmd));
 	}
 }
@@ -131,8 +115,7 @@ string TextBuddy::getCommandParams(string cmd){
     int found = cmd.find(' ');
     if (found == string::npos){
         return "";
-    }
-    else {
+    } else {
         cmd = cmd.substr(found + 1);
         return trim(cmd);
     }
@@ -155,8 +138,7 @@ void TextBuddy::closeFiles(){
 void TextBuddy::writeToFile(string toStore, int mode){
     if (mode == OPERATION_APPEND){
         writeFile.open(fileName, ios::app);
-    }
-    else if (mode == OPERATION_OVERWRITE){
+    } else if (mode == OPERATION_OVERWRITE){
         writeFile.open(fileName);
 		size = 0;
     }
@@ -167,8 +149,7 @@ void TextBuddy::writeToFile(string toStore, int mode){
             writeFile << DELIM;
             printMsg("added to " + fileName + ": \"" + toStore + "\"");
         }
-    }
-    else {
+    } else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
     }
 }
@@ -177,21 +158,18 @@ void TextBuddy::deleteFromFile(string lineString){
     readFile.open(fileName);
     if (isEmptyFile()){
         printMsg(fileName + " is empty");
-    }
-    else if (readFile.good()){
+    } else if (readFile.good()){
 		deleteLine(lineString);
-    }
-    else {
+    } else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
     }
 }
 
 void TextBuddy::deleteLine(string lineString){
 	int line;
-	try{
+	try {
 		line = stoi(lineString);
-	}
-	catch(exception e){
+	} catch(exception e){
 		printMsg(MESSAGE_PARAM_ERROR);
 		return;
 	}
@@ -219,11 +197,9 @@ void TextBuddy::searchInFile(string key){
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
-	}
-	else if (readFile.good()){
+	} else if (readFile.good()){
 		readFromFile(PRINT_MODE_SEARCH, key);
-	}
-	else {
+	} else {
 		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
 	}
 }
@@ -232,11 +208,9 @@ string TextBuddy::returnSearch(string key){
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		return fileName + " is empty";
-	}
-	else if (readFile.good()){
+	} else if (readFile.good()){
 		return returnFromFile(PRINT_MODE_SEARCH, key);
-	}
-	else {
+	} else {
 		return MESSAGE_UNABLE_TO_OPEN_FILE;
 	}
 }
@@ -245,11 +219,9 @@ void TextBuddy::readIntoSet(){
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		printMsg(fileName + " is empty");
-	}
-	else if (readFile.good()){
+	} else if (readFile.good()){
 		readFromFile(PRINT_MODE_STORE, "");
-	}
-	else {
+	} else {
 		printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
 	}
 }
@@ -258,11 +230,9 @@ void TextBuddy::displayFromFile() {
     readFile.open(fileName);
     if (isEmptyFile()){
         printMsg(fileName + " is empty");
-    }
-    else if (readFile.good()){
+    } else if (readFile.good()){
 		readFromFile(PRINT_MODE_DISPLAY, "");
-    }
-    else {
+    } else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
     }
 }
@@ -271,11 +241,9 @@ string TextBuddy::getDisplayFromFile() {
 	readFile.open(fileName);
 	if (isEmptyFile()){
 		return fileName + " is empty";
-	}
-	else if (readFile.good()){
+	} else if (readFile.good()){
 		return returnFromFile();
-	}
-	else {
+	} else {
 		return MESSAGE_UNABLE_TO_OPEN_FILE;
 	}
 }
@@ -289,8 +257,7 @@ void TextBuddy::readFromFile(int printMode, string key){
         if (line != ""){
 			if (printMode == PRINT_MODE_SEARCH && line.find(key) == string::npos){
 				continue;
-			}
-			else if (printMode == PRINT_MODE_STORE){
+			} else if (printMode == PRINT_MODE_STORE){
 				storage.insert(line);
 				continue;
 			}
@@ -313,8 +280,7 @@ string TextBuddy::returnFromFile(int printMode, string key){
 		if (line != ""){
 			if (printMode == PRINT_MODE_SEARCH && line.find(key) == string::npos){
 				continue;
-			}
-			else if (printMode == PRINT_MODE_STORE){
+			} else if (printMode == PRINT_MODE_STORE){
 				storage.insert(line);
 				continue;
 			}
@@ -324,7 +290,7 @@ string TextBuddy::returnFromFile(int printMode, string key){
 		}
 	}
 	if (printMode == PRINT_MODE_SEARCH && !found){
-		printMsg(MESSAGE_NO_RESULTS);
+		return MESSAGE_NO_RESULTS;
 	}
 }
 
@@ -333,7 +299,7 @@ void TextBuddy::printSorted(){
 	printFromSet();
 }
 
-string TextBuddy::returnSorted(){
+string TextBuddy::returnFirstSorted(){
 	readIntoSet();
 	return returnFromSet();
 }
