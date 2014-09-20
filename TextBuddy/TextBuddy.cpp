@@ -66,13 +66,13 @@ void TextBuddy::delegateTaskWithCommand(string cmd){
     } else if (keyFoundInString(cmd, COMMAND_DISPLAY)){
 		fileOperation(FILE_MODE_DISPLAY, "");
     } else if (keyFoundInString(cmd, COMMAND_CLEAR)){
-        clearFileContents();
+        clearFileContents(CLEAR_LOUD);
     } else if (keyFoundInString(cmd, COMMAND_QUIT)){
         exit(0);
     } else if (keyFoundInString(cmd, COMMAND_SEARCH)){
 		fileOperation(FILE_MODE_SEARCH, getCommandParams(cmd));
 	} else if (keyFoundInString(cmd, COMMAND_SORT)){
-		printSorted();
+		getAndSort();
 	} else {
         printMsg(MESSAGE_INVALID_COMMAND);
     }
@@ -82,7 +82,7 @@ void TextBuddy::getParamAdd(string cmd){
 	if (getCommandParams(cmd).empty()){
 		printMsg(MESSAGE_PARAM_ERROR);
 	} else {
-		writeToFile(getCommandParams(cmd), OPERATION_APPEND); 
+		writeToFile(getCommandParams(cmd), OPERATION_APPEND, OPERATION_LOUD); 
 	}
 	closeFiles();
 }
@@ -130,7 +130,8 @@ void TextBuddy::closeFiles(){
     writeFile.close();
 }
 
-void TextBuddy::writeToFile(string toStore, int mode){
+void TextBuddy::writeToFile(string toStore, int mode, int volume){
+	closeFiles();
     if (mode == OPERATION_APPEND){
         writeFile.open(fileName, ios::app);
     } else if (mode == OPERATION_OVERWRITE){
@@ -140,9 +141,11 @@ void TextBuddy::writeToFile(string toStore, int mode){
     if (writeFile.good()){
         writeFile << toStore;
 		size++;
-        if (mode == 1){
+        if (mode == OPERATION_APPEND){
             writeFile << DELIM;
-            printMsg("added to " + fileName + ": \"" + toStore + "\"");
+			if (volume != OPERATION_SILENT){
+				printMsg("added to " + fileName + ": \"" + toStore + "\"");
+			}
         }
     } else {
         printMsg(MESSAGE_UNABLE_TO_OPEN_FILE);
@@ -174,7 +177,7 @@ void TextBuddy::deleteLine(string lineString){
 	value.erase(start, end - start);
 	size--;
 	readFile.close();
-	writeToFile(value, OPERATION_OVERWRITE);
+	writeToFile(value, OPERATION_OVERWRITE, OPERATION_SILENT);
 }
 
 void TextBuddy::fileOperation(int mode, string key){
@@ -219,7 +222,7 @@ void TextBuddy::readFromFile(int printMode, string key){
 	}
 }
 
-void TextBuddy::printSorted(){
+void TextBuddy::getAndSort(){
 	fileOperation(FILE_MODE_STORE, "");
 	printFromSet();
 }
@@ -229,8 +232,12 @@ void TextBuddy::printFromSet(){
 		printMsg(MESSAGE_EMPTY_FILE);
 		return;
 	}
+	clearFileContents(CLEAR_SILENT);
 	int i = 1;
+	size = 0;
 	for (set<string>::iterator it = storage.begin(); it != storage.end(); ++it){
+		writeToFile(*it, OPERATION_APPEND, OPERATION_SILENT);
+		size++;
 		printMsg(to_string(i) + ". " + *it);
 		i++;
 	}
@@ -243,17 +250,19 @@ bool TextBuddy::isEmptyFile(){
     return length == 0;
 }
 
-void TextBuddy::clearFileContents(){
+void TextBuddy::clearFileContents(int mode){
+	writeToFile("", 0, OPERATION_SILENT);
     remove(fileName.c_str());
-    printMsg(MESSAGE_CLEARED + fileName);
+	if (mode == CLEAR_LOUD){
+		printMsg(MESSAGE_CLEARED + fileName);
+	}
     writeFile.open(fileName);
 	size = 0;
 }
 
 void TextBuddy::getReadyToTest(){
 	fileName = "mytextfile.txt";
-	clearFileContents();
-	writeToFile("", 0);
+	clearFileContents(CLEAR_SILENT);
 	closeFiles();
 }
 
